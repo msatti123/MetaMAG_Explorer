@@ -8,7 +8,7 @@
 
 ## 📚 **Complete Documentation Available**
 
-### **[📖 View Full Documentation](https://msatti123.github.io/MetaMAG_Explorer/)** | **[🚀 Installation Guide](https://msatti123.github.io/MetaMAG_Explorer/installation.html)** | **[📋 User Guide](https://msatti123.github.io/MetaMAG_Explorer/user-guide.html)**
+### **[ View Full Documentation](https://msatti123.github.io/MetaMAG_Explorer/)** | **[ Installation Guide](https://msatti123.github.io/MetaMAG_Explorer/installation.html)** | **[ User Guide](https://msatti123.github.io/MetaMAG_Explorer/user-guide.html)**
 
 ---
 
@@ -16,7 +16,7 @@
 
 **MetaMAG Explorer** is a comprehensive, modular pipeline for **Metagenome-Assembled Genome (MAG)** analysis, specializing in novel MAG detection and database integration. The pipeline provides an end-to-end solution from raw metagenomic reads to functionally annotated genomes with phylogenetic placement.
 
-### 🎯 Key Highlights
+###  Key Highlights
 - **Novel MAG Detection**: Automatically identifies and processes novel genomes not present in existing databases
 - **Database Integration**: Seamlessly integrates novel MAGs into Kraken2 databases for improved future analyses
 - **Rumen Microbiome Specialization**: Includes dedicated workflows for rumen microbiome studies with reference MAG integration
@@ -29,11 +29,11 @@
 
 | Documentation | Description |
 |--------------|-------------|
-| **[🏠 Main Documentation](https://msatti123.github.io/MetaMAG_Explorer/)** | Complete pipeline overview, features, and FAQ |
-| **[⚙️ Installation Guide](https://msatti123.github.io/MetaMAG_Explorer/installation.html)** | Step-by-step installation instructions |
-| **[📘 User Guide](https://msatti123.github.io/MetaMAG_Explorer/user-guide.html)** | Detailed execution guide for all pipeline steps |
+| **[ Main Documentation](https://msatti123.github.io/MetaMAG_Explorer/)** | Complete pipeline overview, features, and FAQ |
+| **[ Installation Guide](https://msatti123.github.io/MetaMAG_Explorer/installation.html)** | Step-by-step installation instructions |
+| **[ User Guide](https://msatti123.github.io/MetaMAG_Explorer/user-guide.html)** | Detailed execution guide for all pipeline steps |
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 - Linux OS (Ubuntu recommended)
@@ -90,7 +90,7 @@ python -m MetaMAG.main \
 
 **[→ See complete user guide with all steps](https://msatti123.github.io/MetaMAG_Explorer/user-guide.html)**
 
-## 🔧 Pipeline Components
+##  Pipeline Components
 
 ### Core Modules
 
@@ -128,7 +128,7 @@ python -m MetaMAG.main \
 
 **[→ View detailed pipeline workflow](https://msatti123.github.io/MetaMAG_Explorer/#pipeline-overview)**
 
-## 🐄 Rumen Microbiome Features
+##  Rumen Microbiome Features
 
 Special workflows for rumen microbiome analysis:
 - Automatic download of reference MAGs (RUG, RMGMC, MGnify)
@@ -138,7 +138,7 @@ Special workflows for rumen microbiome analysis:
 
 **[→ Learn about rumen-specific features](https://msatti123.github.io/MetaMAG_Explorer/#rumen-mags)**
 
-## 📊 Key Outputs
+##  Key Outputs
 
 ```
 output_dir/
@@ -176,7 +176,7 @@ Run individual steps or combinations:
 
 **[→ See step-by-step execution guide](https://msatti123.github.io/MetaMAG_Explorer/user-guide.html)**
 
-## 🖥️ HPC/SLURM Integration
+##  HPC/SLURM Integration
 
 Example SLURM submission:
 
@@ -196,7 +196,7 @@ python -m MetaMAG.main \
 
 **[→ View complete SLURM examples](https://msatti123.github.io/MetaMAG_Explorer/user-guide.html#slurm-setup)**
 
-## 📋 Requirements
+##  Requirements
 
 ### Computational Resources (Recommended)
 - **Assembly**: 100-200 GB RAM
@@ -214,14 +214,14 @@ python -m MetaMAG.main \
 
 **[→ View complete tool list and versions](https://msatti123.github.io/MetaMAG_Explorer/installation.html)**
 
-## 📚 Documentation & Support
+##  Documentation & Support
 
-- **[📖 Full Documentation](https://msatti123.github.io/MetaMAG_Explorer/)** - Complete pipeline documentation
-- **[❓ FAQ](https://msatti123.github.io/MetaMAG_Explorer/#faq)** - Frequently asked questions
-- **[🔧 Troubleshooting](https://msatti123.github.io/MetaMAG_Explorer/#troubleshooting)** - Common issues and solutions
-- **[📧 Contact](mailto:mariasatti12@gmail.com)** - mariasatti12@gmail.com
+- **[ Full Documentation](https://msatti123.github.io/MetaMAG_Explorer/)** - Complete pipeline documentation
+- **[ FAQ](https://msatti123.github.io/MetaMAG_Explorer/#faq)** - Frequently asked questions
+- **[ Troubleshooting](https://msatti123.github.io/MetaMAG_Explorer/#troubleshooting)** - Common issues and solutions
+- **[ Contact](mailto:mariasatti12@gmail.com)** - mariasatti12@gmail.com
 
-## 📄 Citation
+##  Citation
 
 **Manuscript in preparation**
 
@@ -238,7 +238,7 @@ MetaMAG Explorer (2025). GitHub repository.
 https://github.com/msatti123/MetaMAG_Explorer
 ```
 
-## 🤝 Contributing
+##  Contributing
 
 We welcome contributions! Please:
 1. Fork the repository
@@ -247,21 +247,21 @@ We welcome contributions! Please:
 4. Push to the branch (`git push origin feature/NewFeature`)
 5. Open a Pull Request
 
-## 📜 License
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - Tools and database developers cited in our [references](https://msatti123.github.io/MetaMAG_Explorer/#references)
 - GTDB team for the Genome Taxonomy Database
 - Rumen microbiome research community
 
-## 🚦 Project Status
+##  Project Status
 
-- ✅ **Version 1.0.0** - Stable release
-- 🔄 Active development and maintenance
-- 📝 Manuscript in preparation
+-  **Version 1.0.0** - Stable release
+-  Active development and maintenance
+-  Manuscript in preparation
 
 ---
 
