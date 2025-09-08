@@ -1,0 +1,2899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetaMAG Explorer - Pipeline Execution Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --dark: #1f2937;
+            --light: #f3f4f6;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #fafafa;
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links .active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 2px;
+        }
+
+        .nav-cta {
+            background: var(--primary);
+            color: var(--white);
+            padding: 0.5rem 1.25rem;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .nav-cta:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        /* Header */
+        .header {
+            background: var(--gradient);
+            color: var(--white);
+            padding: 100px 0 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            gap: 40px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 30px;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: var(--dark);
+            padding: 0.5rem 0;
+            display: block;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            padding-left: 10px;
+        }
+
+        .sidebar a:hover {
+            color: var(--primary);
+            border-left-color: var(--primary);
+            background: var(--light);
+        }
+
+        .sidebar a.active {
+            color: var(--primary);
+            border-left-color: var(--primary);
+            background: var(--light);
+            font-weight: 600;
+        }
+
+        /* Content */
+        .content {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .content h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .content h3 {
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem;
+            color: var(--dark);
+        }
+
+        .content h4 {
+            font-size: 1.2rem;
+            margin: 1.5rem 0 1rem;
+            color: var(--accent);
+        }
+
+        .content h5 {
+            font-size: 1.1rem;
+            margin: 1rem 0 0.5rem;
+            color: var(--primary);
+        }
+
+        .content p {
+            margin-bottom: 1rem;
+            color: #4b5563;
+        }
+
+        .content ul, .content ol {
+            margin-bottom: 1rem;
+            margin-left: 2rem;
+        }
+
+        .content li {
+            margin-bottom: 0.5rem;
+            color: #4b5563;
+        }
+
+        /* Code blocks with copy button */
+        .code-block-container {
+            position: relative;
+            margin: 1.5rem 0;
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            padding-top: 2.5rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+
+        .code-block-header {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--primary);
+            border-radius: 0 8px 0 8px;
+            padding: 0.25rem 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .code-language {
+            color: var(--white);
+            font-size: 0.8rem;
+            font-family: -apple-system, sans-serif;
+            font-weight: 600;
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: -apple-system, sans-serif;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .copy-btn.copied {
+            background: var(--secondary);
+            border-color: var(--secondary);
+        }
+
+        /* Alert boxes */
+        .alert {
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            border-left: 4px solid var(--primary);
+            color: #1e40af;
+        }
+
+        .alert-warning {
+            background: #fed7aa;
+            border-left: 4px solid var(--accent);
+            color: #92400e;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            border-left: 4px solid var(--secondary);
+            color: #065f46;
+        }
+
+        .alert-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        /* Requirements box */
+        .requirements-box {
+            background: #f0f9ff;
+            border: 2px solid #0284c7;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .requirements-box h5 {
+            color: #0c4a6e;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Quick start box */
+        .quick-start {
+            background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 2px solid var(--primary);
+        }
+
+        .quick-start h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .quick-start ol {
+            margin-left: 1.5rem;
+        }
+
+        .quick-start li {
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        /* Step cards */
+        .step-card {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--primary);
+        }
+
+        .step-card h5 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* Best practices box */
+        .best-practices {
+            background: #f0f9ff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .best-practices h4 {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        /* Buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--dark);
+            border: 2px solid var(--light);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                MetaMAG Explorer
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#features">Features</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="user-guide.html" class="active">User Guide</a></li>
+                <li><a href="https://github.com/yourusername/MetaMAG-Explorer" class="nav-cta">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="header">
+        <h1>Pipeline Execution Guide</h1>
+        <p>Complete documentation for running the MetaMAG Explorer pipeline from start to finish</p>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h3>Quick Navigation</h3>
+            <ul>
+                <li><a href="#quick-start" class="active">Quick Start</a></li>
+                <li><a href="#slurm-setup">SLURM Setup</a></li>
+                <li><a href="#file-requirements">File Requirements</a></li>
+                <li><a href="#configuration">Configuration</a></li>
+                <li><a href="#quality-control">1. Quality Control</a></li>
+                <li><a href="#preprocessing">2. Preprocessing</a></li>
+                <li><a href="#assembly">3. Assembly</a></li>
+                <li><a href="#binning">4. Binning</a></li>
+                <li><a href="#evaluation">5. Evaluation</a></li>
+                <li><a href="#taxonomy">6. Taxonomy</a></li>
+                <li><a href="#annotation">7. Annotation</a></li>
+                <li><a href="#example-script">Complete Example</a></li>
+                <li><a href="#troubleshooting">Troubleshooting</a></li>
+            </ul>
+        </aside>
+
+        <!-- Content -->
+        <article class="content">
+            <!-- Quick Start Section -->
+            <section id="quick-start">
+                <div class="quick-start">
+                    <h3>🚀 Quick Start: Run the Pipeline</h3>
+                    <p>If you're looking for the fastest way to execute the pipeline:</p>
+                    
+                    <p><strong>Use the provided run.sh script.</strong></p>
+                    <p>It's preconfigured to handle most parameters, and you only need to update your file paths and step names.</p>
+                    
+                    <h4>What You Need To Do:</h4>
+                    <ol>
+                        <li>Open run.sh in a text editor.</li>
+                        <li>Update these key variables:
+                            <ul>
+                                <li>WORK_DIR -- your project directory</li>
+                                <li>SAMPLES -- path to your sample list file</li>
+                                <li>PROJECT_CONFIG -- your YAML config</li>
+                                <li>STEPS -- choose which step(s) to run</li>
+                                <li>CONDA_ENV -- path to your conda environment</li>
+                                <li>Other relevant paths (e.g., reference genome, Kraken DB)</li>
+                            </ul>
+                        </li>
+                        <li>Submit the job to SLURM:
+                            <div class="code-block-container">
+                                <div class="code-block-header">
+                                    <span class="code-language">bash</span>
+                                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                                </div>
+                                <pre class="code-block">sbatch run.sh</pre>
+                            </div>
+                        </li>
+                    </ol>
+                    
+                    <div class="alert alert-info">
+                        <div>
+                            <h4> <span class="alert-icon">ℹ️</span>Note</h4>
+                            <p> Alternatively, if you'd like to run steps in a more customized or incremental way, refer to the detailed  instructions below.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLURM Setup Section -->
+            <section id="slurm-setup">
+                <h2>SLURM Setup Example</h2>
+                
+                <p>Here's a complete example of a SLURM submission script with all necessary components:</p>
+                
+                <div class="code-block-container">
+                    <div class="code-block-header">
+                        <span class="code-language">bash</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre class="code-block">#!/bin/bash
+#SBATCH -p ghpc                    # Partition/queue name
+#SBATCH -N 1                       # Number of nodes
+#SBATCH -n 1                       # Number of tasks
+#SBATCH --mem=10G                  # Memory allocation
+#SBATCH -t 2:30:00                 # Time limit (HH:MM:SS)
+#SBATCH --output=pipeline_meta_%j.out    # Standard output log
+#SBATCH --error=pipeline_meta_%j.err     # Standard error log
+
+# CRITICAL: Set your conda environment path (adjust to YOUR installation)
+CONDA_ENV="/usr/home/qgg/maralta/.local/bin/miniconda3/bin/activate metamag"
+
+# Navigate to MetaMAG directory
+cd /usr/home/qgg/zexi/INCOME/Exp2/MetaG_Exp2_HSink_analysis/pipeline_test/MetaMAG-1.0.0
+
+# Activate conda environment
+source $CONDA_ENV
+
+# Run the pipeline with specified step
+python3 -m MetaMAG.main \
+  --project_config plant_project_config.yaml \
+  --samples-file samples.txt \
+  --batch_size 16 \
+  --cpus 1 \
+  --memory 20G \
+  --time 15-12:00:00 \
+  --log_dir ./logs/plant/qc \
+  --steps qc</pre>
+                </div>
+                
+                <div class="alert alert-warning">
+                    
+                    <div>
+                        <h4><span class="alert-icon">⚠️</span>Adjust SLURM Parameters Based on Your Step</h4>
+                        <p>Different pipeline steps require different resources:</p>
+                        <ul>
+                            <li><strong>QC:</strong> Low resources (4 CPUs, 8G memory, 2 hours)</li>
+                            <li><strong>Trimming:</strong> Medium resources (8 CPUs, 16G memory, 4 hours)</li>
+                            <li><strong>Assembly:</strong> High resources (32-64 CPUs, 100-200G memory, 1-2 days)</li>
+                            <li><strong>Binning:</strong> High resources (32 CPUs, 64G memory, 12 hours)</li>
+                            <li><strong>GTDB-Tk:</strong> Very high memory (64 CPUs, 200G memory, 6 hours)</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- File Requirements Section -->
+            <section id="file-requirements">
+                <h2>File Naming Requirements</h2>
+                
+                <div class="requirements-box">
+                    <h5>📁 Input File Naming Conventions</h5>
+                    <p>Files must follow these naming patterns:</p>
+                    <ul>
+                        <li><code>{sample}_1.fastq.gz</code> and <code>{sample}_2.fastq.gz</code></li>
+                        <li><code>{sample}_R1.fastq.gz</code> and <code>{sample}_R2.fastq.gz</code></li>
+                        <li><code>{sample}_forward.fastq.gz</code> and <code>{sample}_reverse.fastq.gz</code></li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Configuration Section -->
+            <section id="configuration">
+                <h2>Configuration Setup</h2>
+                
+                <h3>Project Configuration File (ONLY 3 LINES NEEDED)</h3>
+                
+                <div class="code-block-container">
+                    <div class="code-block-header">
+                        <span class="code-language">yaml</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre class="code-block"># project_config.yaml - ONLY THESE 3 LINES
+input_dir: "/path/to/raw/reads"
+output_dir: "/path/to/output"
+reference: "/path/to/host/genome.fa"  # Optional for host removal</pre>
+                </div>
+                
+
+                <h3>Sample List Format</h3>
+                <div class="code-block-container">
+                    <div class="code-block-header">
+                        <span class="code-language">text</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre class="code-block"># samples.txt
+Sample_001
+Sample_002
+Sample_003</pre>
+                </div>
+            </section>
+
+            <!-- Quality Control Section -->
+            <section id="quality-control">
+                <h2>Step 1: Quality Control</h2>
+                
+                <div class="step-card">
+                    <h5>What it does:</h5>
+                    <ul>
+                        <li>Runs initial quality assessment on raw sequencing reads</li>
+                        <li>Generates quality reports using FastQC</li>
+                    </ul>
+                    
+                    <h5>Key Outputs:</h5>
+                    <ul>
+                        <li>Quality control reports</li>
+                        <li>Sequence quality metrics</li>
+                    </ul>
+                    
+                    <h5>Step 1a: Run FastQC</h5>
+                    
+                    <div class="code-block-container">
+                        <div class="code-block-header">
+                            <span class="code-language">bash</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre class="code-block"># CORRECT COMMAND FORMAT
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps qc \
+  --batch_size 20 \
+  --cpus 4 \
+  --memory "8G" \
+  --time "0-02:00:00" \
+  --log_dir ./logs</pre>
+                    </div>
+                    
+                    <h5>Step 1b: Generate MultiQC Report</h5>
+                    <div class="code-block-container">
+                        <div class="code-block-header">
+                            <span class="code-language">bash</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre class="code-block"># No samples file needed for MultiQC
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps multiqc \
+  --input_dir $WORK_DIR/QC \
+  --batch_size 1 \
+  --cpus 2 \
+  --memory "4G" \
+  --time "0-00:30:00" \
+  --log_dir ./logs</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Preprocessing Section -->
+            <section id="preprocessing">
+                <h2>Step 2: Preprocessing</h2>
+                
+                <div class="step-card">
+                    <h5>Step 2a: Trimming (Fastp)</h5>
+                    
+                    <h5>What it does:</h5>
+                    <ul>
+                        <li>Removes low-quality bases</li>
+                        <li>Trims adapter sequences</li>
+                        <li>Filters out poor-quality reads</li>
+                    </ul>
+                    
+                    <h5>Key Outputs:</h5>
+                    <ul>
+                        <li>Cleaned read files</li>
+                        <li>Trimming statistics</li>
+                    </ul>
+                    
+                    <p>Hardcoded parameters: Q20 quality, 30bp minimum length</p>
+                    
+                    <div class="code-block-container">
+                        <div class="code-block-header">
+                            <span class="code-language">bash</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre class="code-block">python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps trimming \
+  --batch_size 10 \
+  --cpus 8 \
+  --memory "16G" \
+  --time "0-04:00:00" \
+  --log_dir ./logs</pre>
+                    </div>
+
+                    <h5>Step 2b: Host Removal</h5>
+                    
+                    <h5>What it does:</h5>
+                    <ul>
+                        <li>Removes host-derived sequences</li>
+                        <li>Maps reads against reference genome</li>
+                        <li>Extracts non-host (microbial) reads</li>
+                    </ul>
+                    
+                    <h5>Key Outputs:</h5>
+                    <ul>
+                        <li>Host-free metagenomic reads</li>
+                        <li>Mapping statistics</li>
+                    </ul>
+                    
+                    <div class="code-block-container">
+                        <div class="code-block-header">
+                            <span class="code-language">bash</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre class="code-block">python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps host_removal \
+  --reference $REFERENCE \
+  --batch_size 10 \
+  --cpus 16 \
+  --memory "32G" \
+  --time "0-06:00:00" \
+  --log_dir ./logs</pre>
+                    </div>
+                    
+                    
+                </div>
+            </section>
+
+            <!-- Assembly Section -->
+            <section id="assembly">
+                <h2>Step 3: Assembly</h2>
+                
+                <div class="step-card">
+                    <h5>Step 3a: Single Assembly (IDBA-UD)</h5>
+                    
+                    <h5>What it does:</h5>
+                    <ul>
+                        <li>Assembles reads for individual samples</li>
+                        <li>Generates contigs using IDBA-UD assembler</li>
+                    </ul>
+                    
+                    <h5>Key Outputs:</h5>
+                    <ul>
+                        <li>Assembled contigs</li>
+                        <li>Assembly statistics</li>
+                    </ul>
+                    
+                    <div class="code-block-container">
+                        <div class="code-block-header">
+                            <span class="code-language">bash</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre class="code-block"># ALWAYS uses IDBA-UD (no --assembler parameter)
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps single_assembly \
+  --batch_size 5 \
+  --cpus 32 \
+  --memory "100G" \
+  --time "1-00:00:00" \
+  --log_dir ./logs</pre>
+                    </div>
+
+                    <h5>Step 3b: Co-Assembly (MEGAHIT)</h5>
+                    
+                    <h5>What it does:</h5>
+                    <ul>
+                        <li>Combines reads from multiple samples</li>
+                        <li>Generates a unified assembly using MEGAHIT</li>
+                    </ul>
+                    
+                    <h5>Key Outputs:</h5>
+                    <ul>
+                        <li>Co-assembled contigs</li>
+                        <li>Merged assembly statistics</li>
+                    </ul>
+                    
+                    <p>Hardcoded: k-mer 21-141, step 12</p>
+                    
+                    <div class="code-block-container">
+                        <div class="code-block-header">
+                            <span class="code-language">bash</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre class="code-block"># ALWAYS uses MEGAHIT with k-mer 21-141
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps co_assembly \
+  --batch_size 50 \
+  --cpus 64 \
+  --memory "200G" \
+  --time "2-00:00:00" \
+  --log_dir ./logs</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Binning Section -->
+            <!-- Binning Section -->
+<section id="binning">
+    <h2>Step 4: Binning & Refinement</h2>
+    
+    <div class="step-card">
+        <h5>Step 4a: Binning</h5>
+        
+        <h5>What it does:</h5>
+        <ul>
+            <li>Clusters contigs into potential genome bins</li>
+            <li>Uses multiple binning algorithms (MetaBAT2, MaxBin2, CONCOCT)</li>
+        </ul>
+        
+        <h5>Key Outputs:</h5>
+        <ul>
+            <li>Initial genome bins</li>
+            <li>Binning statistics</li>
+        </ul>
+        
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block">python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps single_binning \
+  --binning_methods metabat2 maxbin2 concoct \
+  --batch_size 10 \
+  --cpus 32 \
+  --memory "64G" \
+  --time "0-12:00:00" \
+  --log_dir ./logs</pre>
+        </div>
+
+        <h5>Step 4b: Refinement with DAS Tool</h5>
+        
+        <h5>What it does:</h5>
+        <ul>
+            <li>Refines and merges bins from multiple methods</li>
+            <li>Improves bin quality using DAS Tool</li>
+            <li>Filters bins to process only valid naming patterns</li>
+        </ul>
+        
+        <h5>Key Outputs:</h5>
+        <ul>
+            <li>Refined, high-quality genome bins</li>
+            <li>DAS Tool quality scores</li>
+            <li>Filtered bin directories</li>
+        </ul>
+        
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block">python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps single_bin_refinement \
+  --score_threshold 0.5 \
+  --batch_size 10 \
+  --cpus 32 \
+  --memory "64G" \
+  --time "0-06:00:00" \
+  --log_dir ./logs</pre>
+        </div>
+        
+        <div class="alert alert-info">
+            <span class="alert-icon">ℹ️</span>
+            <div>
+                <h4>DAS Tool Processing Notes</h4>
+                <ul>
+                    <li>Score threshold: 0.5 (can be adjusted with --score_threshold)</li>
+                    <li>Automatically handles missing or empty bin directories</li>
+                    <li>Creates TSV mapping files for each binning method</li>
+                    <li>Continues pipeline even if DAS Tool fails due to low-quality bins</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Evaluation Section -->
+<section id="evaluation">
+    <h2>Step 5: Quality Assessment & Dereplication</h2>
+    
+    <div class="step-card">
+        <h5>Step 5a: Quality Assessment with CheckM</h5>
+        
+        <h5>What it does:</h5>
+        <ul>
+            <li>Runs CheckM lineage workflow to assess genome quality</li>
+            <li>Estimates completeness using lineage-specific marker genes</li>
+            <li>Calculates contamination based on duplicated markers</li>
+            <li>Generates detailed quality metrics and visualization plots</li>
+        </ul>
+        
+        <h5>CheckM Workflow Details:</h5>
+        <ul>
+            <li><strong>Method:</strong> lineage_wf (lineage-specific workflow)</li>
+            <li><strong>Marker set:</strong> Automatically selected based on taxonomic placement</li>
+            <li><strong>Extension:</strong> .fa files</li>
+        </ul>
+        
+        <h5>Key Outputs:</h5>
+        <ul>
+            <li><strong>CheckM Raw Outputs:</strong>
+                <ul>
+                    <li>lineage.ms - Marker lineage information</li>
+                    <li>storage/bin_stats_ext.tsv - Raw CheckM statistics</li>
+                    <li>checkm_output.log - CheckM execution log</li>
+                </ul>
+            </li>
+            <li><strong>Processed Outputs:</strong>
+                <ul>
+                    <li>cleaned_checkm_output.csv - Formatted quality metrics table</li>
+                    <li>plots/completeness_contamination_plot.pdf - Bubble plot (size = genome size)</li>
+                    <li>plots/genome_quality_plot.pdf - Quality categories with histograms</li>
+                    <li>plots/scaffolds_histogram.pdf - Scaffold count distribution</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <div class="alert alert-info">
+            <span class="alert-icon">ℹ️</span>
+            <div>
+                <h4>CheckM Processing Notes</h4>
+                <ul>
+                    <li>CheckM lineage_wf is used (not qa or taxonomy_wf)</li>
+                    <li>Automatically processes bin_stats_ext.tsv to create cleaned CSV</li>
+                    <li>Skips execution if all outputs exist (delete output dir to re-run)</li>
+                    <li>Quality categories: 
+                        <ul>
+                            <li>Near Complete: ≥90% complete, ≤5% contamination</li>
+                            <li>Medium Quality: ≥70% complete, ≤10% contamination</li>
+                            <li>Partial: ≥50% complete, ≤4% contamination</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <h5>Run CheckM on dRep output (default):</h5>
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block"># Runs CheckM on dereplicated genomes from dRep
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps evaluation \
+  --batch_size 50 \
+  --cpus 32 \
+  --memory "64G" \
+  --time "0-06:00:00" \
+  --log_dir ./logs</pre>
+        </div>
+        
+        <h5>Run CheckM on custom genome directory:</h5>
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block"># Evaluate genomes from a custom directory
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps evaluation \
+  --evaluation_input_dir /path/to/custom/genomes \
+  --batch_size 50 \
+  --cpus 32 \
+  --memory "64G" \
+  --time "0-06:00:00" \
+  --log_dir ./logs</pre>
+        </div>
+
+        <h5>Step 5b: Dereplication with dRep</h5>
+        
+        <h5>What it does:</h5>
+        <ul>
+            <li>Removes redundant MAGs across samples</li>
+            <li>Clusters genomes based on ANI similarity</li>
+            <li>Selects representative genome from each cluster</li>
+        </ul>
+        
+        <h5>Key Outputs:</h5>
+        <ul>
+            <li>dereplicated_genomes/ - Non-redundant MAG set</li>
+            <li>data_tables/genomeInfo.csv - Quality and clustering information</li>
+            <li>passing_genomes.csv - List of genomes passing QC (if recovery mode activated)</li>
+        </ul>
+        
+        <div class="alert alert-info">
+            <span class="alert-icon">ℹ️</span>
+            <div>
+                <h4>dRep Configuration (Hardcoded Parameters)</h4>
+                <ul>
+                    <li><strong>Minimum completeness:</strong> 80%</li>
+                    <li><strong>Maximum contamination:</strong> 10%</li>
+                    <li><strong>Strain heterogeneity:</strong> 100</li>
+                    <li><strong>ANI method:</strong> fastANI</li>
+                    <li><strong>Secondary clustering ANI:</strong> 95%</li>
+                </ul>
+                <p><strong>Automatic Recovery:</strong> If dRep fails due to insufficient genomes passing quality thresholds, 
+                the pipeline automatically identifies and copies all genomes meeting the thresholds to a 'dereplicated_genomes' 
+                directory. A 'passing_genomes.csv' file is generated listing all genomes that passed QC.</p>
+                <p><strong>Bin Renaming:</strong> All bins are automatically renamed with their source prefix 
+                (e.g., Sample_001_bin.1.fa for single samples, coassembly_bin.1.fa for co-assembly).</p>
+            </div>
+        </div>
+        
+        <h5>Run CheckM + dRep together:</h5>
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block"># Run both CheckM evaluation and dRep dereplication
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps evaluation dRep \
+  --batch_size 50 \
+  --cpus 32 \
+  --memory "64G" \
+  --time "0-06:00:00" \
+  --log_dir ./logs</pre>
+        </div>
+    </div>
+</section>
+
+<!-- Taxonomy Section -->
+<section id="taxonomy">
+    <h2>Step 6: Taxonomic Classification (GTDB-Tk)</h2>
+    
+    <div class="step-card">
+        <h5>What it does:</h5>
+        <ul>
+            <li>Assigns taxonomic classifications to MAGs</li>
+            <li>Uses Genome Taxonomy Database (GTDB) for classification</li>
+            <li>Runs classify_wf workflow only (not de novo workflow)</li>
+        </ul>
+        
+        <h5>Key Outputs:</h5>
+        <ul>
+            <li>classify/gtdbtk.bac120.summary.tsv - Bacterial classifications</li>
+            <li>classify/gtdbtk.ar53.summary.tsv - Archaeal classifications</li>
+            <li>Phylogenetic placement information</li>
+        </ul>
+        
+        <div class="alert alert-info">
+            <span class="alert-icon">ℹ️</span>
+            <div>
+                <h4>GTDB-Tk Path Configuration</h4>
+                <p><strong>Input Path (Fixed):</strong></p>
+                <code>{project_output}/Bin_Refinement/drep/dRep_output/dereplicated_genomes</code>
+                <p style="margin-top: 10px;"><strong>Output Path (Fixed):</strong></p>
+                <code>{project_output}/Novel_Mags/gtdbtk</code>
+                <p style="margin-top: 10px;"><strong>Processing Notes:</strong></p>
+                <ul>
+                    <li>ANI screening is disabled (--skip_ani_screen) for faster processing</li>
+                    <li>Only runs taxonomic classification, not phylogenetic tree inference</li>
+                    <li>File extension expected: .fa</li>
+                    <li>Automatically creates output directory structure</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block"># NO samples file needed
+# Paths are automatically determined from project config
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps gtdbtk \
+  --batch_size 1 \
+  --cpus 64 \
+  --memory "200G" \
+  --time "0-06:00:00" \
+  --log_dir ./logs</pre>
+        </div>
+        
+        <div class="alert alert-warning">
+            <span class="alert-icon">⚠️</span>
+            <div>
+                <h4>Memory Requirements</h4>
+                <p>GTDB-Tk requires substantial memory (~200GB) due to the reference database size. 
+                Ensure adequate resources are allocated. The tool may fail with insufficient memory 
+                without clear error messages.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Add after Taxonomy Section (Step 6) -->
+
+<!-- Rumen Reference MAGs Section -->
+<section id="rumen-mags">
+    <h2>Step 7: Rumen Reference MAGs Processing (Optional)</h2>
+    
+    <div class="alert alert-info">
+        <span class="alert-icon">ℹ️</span>
+        <div>
+            <h4>For Rumen Microbiome Projects</h4>
+            <p>These steps are specifically designed for rumen microbiome studies. They integrate 
+            high-quality reference genomes from major rumen microbiome databases (RGMGC, MGnify, RUG).</p>
+        </div>
+    </div>
+
+    <h3>Step 7.1: Download Reference MAGs</h3>
+    <div class="step-card">
+        <h5>What it does:</h5>
+        <ul>
+            <li>Downloads reference MAGs from three major sources:
+                <ul>
+                    <li><strong>RGMGC:</strong> 10,373 genomes from ENA (European Nucleotide Archive)</li>
+                    <li><strong>MGnify:</strong> 2,729 genomes from cow rumen species catalogue</li>
+                    <li><strong>RUG:</strong> 4,941 genomes from Rumen Uncultured Genomes dataset</li>
+                </ul>
+            </li>
+            <li>Automatically handles download retries and error recovery</li>
+            <li>Processes downloaded files (extracts .gz, standardizes to .fa extension)</li>
+            <li>Total: ~18,043 reference genomes if all downloaded successfully</li>
+        </ul>
+        
+        <h5>Requirements:</h5>
+        <ul>
+            <li>Internet connection for downloading</li>
+            <li>~50-100GB disk space</li>
+            <li>dataset_file_list.txt and ena_mags_list.tsv files in script directory</li>
+        </ul>
+        
+        <h5>Key Outputs:</h5>
+        <ul>
+            <li>All files standardized with .fa extension in single directory</li>
+        </ul>
+        
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block">python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps rumen_refmags_download \
+  --dataset_dir /path/to/store/reference_mags \
+  --batch_size 1 \
+  --cpus 4 \
+  --memory "16G" \
+  --time "0-12:00:00" \
+  --log_dir ./logs</pre>
+        </div>
+        
+        <div class="alert alert-info">
+            <span class="alert-icon">ℹ️</span>
+            <div>
+                <p>The download process checks for existing files and skips already downloaded genomes, 
+                making it resumable if interrupted.</p>
+            </div>
+        </div>
+    </div>
+
+    <h3>Step 7.2: Dereplicate Reference MAGs</h3>
+    <div class="step-card">
+        <h5>What it does:</h5>
+        <ul>
+            <li>Uses dRep to dereplicate the downloaded reference MAG collection</li>
+            <li>Removes redundant genomes based on ANI thresholds</li>
+            <li>Selects highest quality representative from each cluster</li>
+        </ul>
+        
+        <h5>dRep Parameters (Hardcoded):</h5>
+        <ul>
+            <li>Completeness threshold: 80%</li>
+            <li>Contamination threshold: 10%</li>
+            <li>ANI method: fastANI</li>
+            <li>Secondary clustering: 95% ANI</li>
+        </ul>
+        
+        <h5>Key Outputs:</h5>
+        <ul>
+            <li>dereplicated_genomes/ - Representative genomes</li>
+            <li>data_tables/genomeInfo.csv - Quality and clustering information</li>
+        </ul>
+        
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block">python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps rumen_refmags_drep \
+  --dataset_dir /path/to/downloaded/reference_mags \
+  --drep_output_dir /path/to/dereplicated_output \
+  --batch_size 1 \
+  --cpus 32 \
+  --memory "100G" \
+  --time "1-00:00:00" \
+  --log_dir ./logs</pre>
+        </div>
+    </div>
+
+    <h3>Step 7.3: Classify Reference MAGs with GTDB-Tk</h3>
+    <div class="step-card">
+        <h5>What it does:</h5>
+        <ul>
+            <li>Runs GTDB-Tk classify_wf on reference MAGs</li>
+            <li>Identifies novel MAGs (without species-level classification)</li>
+            <li>Processes bacterial and archaeal domains separately</li>
+            <li>Can skip GTDB-Tk if already run (--only_novel flag)</li>
+        </ul>
+        
+        <h5>Key Outputs:</h5>
+        <ul>
+            <li>classify/gtdbtk.bac120.summary.tsv - Bacterial classifications</li>
+            <li>classify/gtdbtk.ar53.summary.tsv - Archaeal classifications</li>
+            <li>novel_rumenref_mags/mags/ - Novel MAG files</li>
+            <li>novel_rumenref_mags/taxonomy/ - Novel MAG taxonomy files</li>
+        </ul>
+        
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block">python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps rumen_refmags_gtdbtk \
+  --genome_dir /path/to/dereplicated_genomes \
+  --gtdbtk_out_dir /path/to/gtdbtk_output \
+  --novel_output_dir /path/to/novel_mags_output \
+  --genome_extension ".fa" \
+  --batch_size 1 \
+  --cpus 64 \
+  --memory "200G" \
+  --time "0-06:00:00" \
+  --log_dir ./logs
+
+# To skip GTDB-Tk if already run (only identify novel MAGs):
+# Add --only_novel flag</pre>
+        </div>
+    </div>
+
+    <h3>Step 7.4: Integrate Project MAGs with Reference MAGs</h3>
+    <div class="step-card">
+        <h5>What it does:</h5>
+        <ul>
+            <li>Combines your project MAGs with reference MAGs</li>
+            <li>Performs co-dereplication of combined set</li>
+            <li>Identifies which project MAGs are truly novel</li>
+            <li>Creates unified non-redundant collection</li>
+        </ul>
+        
+        <h5>Key Outputs:</h5>
+        <ul>
+            <li>Novel_Mags/UniqueProjMags/ - Project-specific unique MAGs</li>
+            <li>Novel_Mags/UniqueRefMags/ - Reference-specific unique MAGs</li>
+            <li>uniqueness_summary.txt - Dereplication statistics</li>
+        </ul>
+        
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block">python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps rumen_drep \
+  --ref_mags_dir /path/to/reference/dereplicated_genomes \
+  --batch_size 1 \
+  --cpus 32 \
+  --memory "100G" \
+  --time "0-12:00:00" \
+  --log_dir ./logs</pre>
+        </div>
+    </div>
+</section>
+
+<!-- Novel MAGs Processing Section -->
+<section id="novel-mags">
+    <h2>Step 8: Novel MAG Processing</h2>
+    
+    <h3>Step 8.1: Identify Novel MAGs</h3>
+    <div class="step-card">
+        <h5>What it does:</h5>
+        <ul>
+            <li>Analyzes GTDB-Tk results to find MAGs without species designation</li>
+            <li>Extracts novel genome candidates from classification</li>
+            <li>Copies novel MAGs to dedicated directory</li>
+        </ul>
+        
+        <h5>Key Outputs:</h5>
+        <ul>
+            <li>Novel_Mags/UniqueMags/ - Candidate novel MAGs</li>
+        </ul>
+        
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block">python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps identify_novel_mags \
+  --custom_gtdbtk_dir /path/to/gtdbtk/results \
+  --batch_size 1 \
+  --cpus 8 \
+  --memory "32G" \
+  --time "0-02:00:00" \
+  --log_dir ./logs</pre>
+        </div>
+    </div>
+
+    <h3>Step 8.2: Process Novel MAGs (Complete Pipeline)</h3>
+    <div class="step-card">
+        <h5>What it does:</h5>
+        <ul>
+            <li>Comprehensive pipeline for novel MAG processing</li>
+            <li>Dereplicates against existing repository</li>
+            <li>For rumen data: dereplicates against reference MAGs</li>
+            <li>Adds to MAGs repository</li>
+            <li>Builds/updates Kraken database</li>
+        </ul>
+        
+        <h5>Required for Rumen Data:</h5>
+        <ul>
+            <li>--is_rumen_data flag</li>
+            <li>--rumen_ref_mags_dir (reference MAGs)</li>
+            <li>--rumen_added_mags_dir (previously added MAGs)</li>
+        </ul>
+        
+        <h5>Key Outputs:</h5>
+        <ul>
+            <li>Novel_Mags/filtered_NMAGs/ - Post-repository dereplication</li>
+            <li>Novel_Mags/true_novel_MAGs/ - Final novel MAGs</li>
+            <li>MAGs_Repository/ - Updated repository</li>
+            <li>Kraken_Database/ - Updated Kraken2 database</li>
+        </ul>
+        
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block"># For general data:
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps process_novel_mags \
+  --kraken_db_path /path/to/kraken_db \
+  --merge_mode \
+  --batch_size 1 \
+  --cpus 64 \
+  --memory "128G" \
+  --time "0-12:00:00" \
+  --log_dir ./logs
+
+# For rumen data:
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps process_novel_mags \
+  --is_rumen_data \
+  --rumen_ref_mags_dir /path/to/rumen/reference/mags \
+  --rumen_added_mags_dir /path/to/rumen/added/mags \
+  --kraken_db_path /path/to/kraken_db \
+  --merge_mode \
+  --batch_size 1 \
+  --cpus 64 \
+  --memory "128G" \
+  --time "0-12:00:00" \
+  --log_dir ./logs</pre>
+        </div>
+        
+        <div class="alert alert-warning">
+            <span class="alert-icon">⚠️</span>
+            <div>
+                <h4>Merge Mode</h4>
+                <p>--merge_mode: Updates existing Kraken database (recommended)</p>
+                <p>--no_merge: Creates fresh database (use carefully)</p>
+            </div>
+        </div>
+    </div>
+
+    <h3>Step 8.3: Add MAGs to Repository</h3>
+    <div class="step-card">
+        <h5>What it does:</h5>
+        <ul>
+            <li>Adds validated novel MAGs to central repository</li>
+            <li>Maintains collection for future reuse</li>
+        </ul>
+        
+        <h5>Key Outputs:</h5>
+        <ul>
+            <li>MAGs_Repository/ - Updated with new MAGs</li>
+        </ul>
+        
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block">python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps add_mags_to_repo \
+  --batch_size 1 \
+  --cpus 8 \
+  --memory "16G" \
+  --time "0-01:00:00" \
+  --log_dir ./logs</pre>
+        </div>
+    </div>
+
+    <h3>Step 8.4: Build Kraken Database</h3>
+    <div class="step-card">
+        <h5>What it does:</h5>
+        <ul>
+            <li>Creates/updates Kraken2 database with novel MAGs</li>
+            <li>Uses advanced taxonomy resolver for conflicts</li>
+            <li>Builds Bracken database for abundance estimation</li>
+        </ul>
+        
+        <h5>Processing Steps:</h5>
+        <ol>
+            <li>Placeholder taxa assignment</li>
+            <li>GTDB to Taxdump conversion</li>
+            <li>Header renaming for Kraken</li>
+            <li>Add to library</li>
+            <li>Build Kraken database</li>
+            <li>Build Bracken database</li>
+            <li>Build distribution</li>
+        </ol>
+        
+        <h5>Key Outputs:</h5>
+        <ul>
+            <li>Kraken_Database/taxonomy/ - nodes.dmp, names.dmp, taxid.map</li>
+            <li>Kraken_Database/library/ - MAG sequences</li>
+            <li>Kraken_Database/*.k2d - Database files</li>
+            <li>Bracken database files for abundance estimation</li>
+        </ul>
+        
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block">python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps build_kraken_db \
+  --kraken_db_path /path/to/kraken_db \
+  --batch_size 1 \
+  --cpus 64 \
+  --memory "200G" \
+  --time "1-00:00:00" \
+  --log_dir ./logs</pre>
+        </div>
+        
+        <div class="alert alert-info">
+            <span class="alert-icon">ℹ️</span>
+            <div>
+                <h4>Required Scripts</h4>
+                <p>The pipeline requires these scripts in the main directory:</p>
+                <ul>
+                    <li>gtdb_to_taxdump_latest_resolve.py - Advanced taxonomy resolver</li>
+                    <li>header_kraken.py - Header renaming script</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Workflow diagram for Rumen Data -->
+<div class="workflow-diagram" style="margin-top: 2rem;">
+    <h4>Recommended Workflow for Rumen Microbiome Data</h4>
+    <p style="font-size: 0.9rem; margin-top: 1rem;">
+        Download References (7.1) → Dereplicate References (7.2) → Classify References (7.3) → 
+        Process Your Samples (Steps 1-6) → Integrate with References (7.4) → 
+        Identify Novel MAGs (8.1) → Process Novel MAGs (8.2) → Build Database (8.4) → 
+        Continue Pipeline (Steps 9+)
+    </p>
+</div>
+
+
+
+
+            <!-- Annotation Section -->
+
+<section id="annotation">
+    <h2>Step 9: Functional Annotation</h2>
+    
+    <div class="alert alert-info">
+        <span class="alert-icon">ℹ️</span>
+        <div>
+            <h4>Comprehensive Functional Analysis Pipeline</h4>
+            <p>The functional annotation pipeline includes three main components: EggNOG annotation 
+            for orthology groups, dbCAN for CAZyme identification, and integrated functional 
+            analysis with visualization.</p>
+        </div>
+    </div>
+
+    <h3>Step 9.1: EggNOG Annotation</h3>
+    <div class="step-card">
+        <h5>What it does:</h5>
+        <ul>
+            <li>Predicts proteins from MAGs using Prodigal (if not already done)</li>
+            <li>Annotates genes with functional information using EggNOG-mapper</li>
+            <li>Uses Diamond for fast alignment (falls back to HMMER if needed)</li>
+            <li>Extracts KO terms, COG categories, and CAZy annotations</li>
+            <li>Creates temporary database in /dev/shm for performance</li>
+        </ul>
+        
+        <h5>Key Outputs:</h5>
+        <ul>
+            <li>eggnog_output/*.emapper.annotations - Raw EggNOG annotations</li>
+            <li>functional_annotations/KOs/ - KEGG Orthology terms</li>
+            <li>functional_annotations/COGs/ - COG categories</li>
+            <li>functional_annotations/CAZy/ - CAZyme annotations</li>
+        </ul>
+        
+        <h5>Configuration Requirements:</h5>
+        <ul>
+            <li>eggnog_mapper path in config</li>
+            <li>eggnog_db_dir path in config</li>
+            <li>prodigal path in config</li>
+        </ul>
+        
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block">python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps eggnog_annotation \
+  --mags_dir /path/to/final_mags \
+  --batch_size 1 \
+  --cpus 32 \
+  --memory "64G" \
+  --time "0-12:00:00" \
+  --log_dir ./logs</pre>
+        </div>
+    </div>
+
+    <h3>Step 9.2: dbCAN CAZyme Annotation</h3>
+    <div class="step-card">
+        <h5>What it does:</h5>
+        <ul>
+            <li>Identifies Carbohydrate-Active Enzymes (CAZymes)</li>
+            <li>Predicts proteins if needed (shares with EggNOG)</li>
+            <li>Runs dbCAN2 with HMMER for CAZyme detection</li>
+            <li>Summarizes CAZyme families and categories</li>
+            <li>Creates visualization plots automatically</li>
+            <li>Groups CAZymes by substrate specificity</li>
+        </ul>
+        
+        <h5>Key Outputs:</h5>
+        <ul>
+            <li>dbcan_output/*_dbcan_results/ - dbCAN results per MAG</li>
+            <li>cazyme_annotations/cazyme_counts/ - Count matrices</li>
+            <li>cazyme_annotations/*.xlsx - Excel summaries</li>
+            <li>cazyme_annotations/plots/ - Visualization plots:
+                <ul>
+                    <li>CAZyme heatmaps</li>
+                    <li>Category distributions</li>
+                    <li>Substrate-specific groupings</li>
+                    <li>Dendrogram clustering</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h5>Configuration Requirements:</h5>
+        <ul>
+            <li>dbcan path in config</li>
+            <li>dbcan_db_dir path in config</li>
+            <li>dbcan_activate conda environment path (optional)</li>
+            <li>prodigal path in config</li>
+        </ul>
+        
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block">python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps dbcan_annotation \
+  --mags_dir /path/to/final_mags \
+  --batch_size 1 \
+  --cpus 32 \
+  --memory "32G" \
+  --time "0-06:00:00" \
+  --log_dir ./logs</pre>
+        </div>
+        
+        <div class="alert alert-info">
+            <span class="alert-icon">ℹ️</span>
+            <div>
+                <h4>Automatic Visualizations</h4>
+                <p>dbCAN automatically generates multiple plots including heatmaps, 
+                category distributions, substrate groupings, and clustering dendrograms. 
+                These require matplotlib, seaborn, and pandas to be installed.</p>
+            </div>
+        </div>
+    </div>
+
+    <h3>Step 9.3: Integrated Functional Analysis</h3>
+    <div class="step-card">
+        <h5>What it does:</h5>
+        <ul>
+            <li>Integrates results from EggNOG and dbCAN</li>
+            <li>Maps KO terms to KEGG pathway hierarchy</li>
+            <li>Creates comprehensive functional profiles</li>
+            <li>Generates advanced visualizations</li>
+            <li>Produces HTML summary report</li>
+            <li>Optional species-based analysis</li>
+        </ul>
+        
+        <h5>Key Outputs:</h5>
+        <ul>
+            <li>functional_analysis/ - Main analysis directory with:
+                <ul>
+                    <li>files/ko/ - KO term matrices</li>
+                    <li>files/cog/ - COG category matrices</li>
+                    <li>files/kegg/ - KEGG pathway mappings</li>
+                    <li>plots/ - Various visualization types:
+                        <ul>
+                            <li>COG main category distributions</li>
+                            <li>KEGG Sankey diagrams</li>
+                            <li>Network visualizations</li>
+                            <li>Hierarchical clustered heatmaps</li>
+                            <li>Circular plots</li>
+                            <li>Treemaps and bubble plots</li>
+                        </ul>
+                    </li>
+                    <li>reports/functional_analysis_report.html - Interactive HTML report</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h5>Required Files:</h5>
+        <ul>
+            <li>ko.txt - KEGG database file (optional but recommended)</li>
+            <li>EggNOG annotation results from Step 9.1</li>
+        </ul>
+        
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block"># Basic functional analysis
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps functional_analysis \
+  --batch_size 1 \
+  --cpus 8 \
+  --memory "32G" \
+  --time "0-02:00:00" \
+  --log_dir ./logs
+
+# With KEGG database file for pathway mapping
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps functional_analysis \
+  --kegg_db_file /path/to/ko.txt \
+  --batch_size 1 \
+  --cpus 8 \
+  --memory "32G" \
+  --time "0-02:00:00" \
+  --log_dir ./logs</pre>
+        </div>
+        
+        <div class="alert alert-warning">
+            <span class="alert-icon">⚠️</span>
+            <div>
+                <h4>KEGG Database File</h4>
+                <p>The ko.txt file enables KEGG pathway hierarchy mapping. Without it, 
+                the analysis will skip pathway-level visualizations but still process 
+                COG and KO annotations.</p>
+            </div>
+        </div>
+    </div>
+
+    <h3>Step 9.4: Advanced Visualizations</h3>
+<div class="step-card">
+    <h5>Prerequisites:</h5>
+    <ul>
+        <li>✅ Must complete Step 9.1 (EggNOG annotation) first</li>
+        <li>✅ Must complete Step 9.3 (Functional Analysis) first</li>
+        <li>Optional: Step 9.2 (dbCAN) for CAZyme visualizations</li>
+    </ul>
+    
+    <h5>What it does:</h5>
+    <ul>
+        <li>Creates comprehensive publication-quality visualizations</li>
+        <li>Generates two complete sets: "All MAGs" and "Novel MAGs Only"</li>
+        <li>Produces 8+ visualization types automatically:
+            <ul>
+                <li>CAZyme heatmaps (clustered and phylum-grouped)</li>
+                <li>COG functional Sankey diagrams</li>
+                <li>KEGG pathway Sankey diagrams</li>
+                <li>KEGG metabolism detailed flows</li>
+                <li>Functional PCA analyses</li>
+                <li>Network visualizations with pie charts</li>
+                <li>Integrated multi-omics views</li>
+            </ul>
+        </li>
+        <li>Automatically handles MAG naming convention differences</li>
+        <li>Limits some visualizations to 30-40 MAGs for clarity</li>
+    </ul>
+    
+    <h5>Key Outputs:</h5>
+    <ul>
+        <li>Advanced_visualizations{suffix}/ - Main directory with all MAGs</li>
+        <li>Advanced_visualizations{suffix}/Novel_MAGs_Only/ - Novel MAGs subset</li>
+        <li>Output formats: PDF, PNG, SVG, and interactive HTML</li>
+        <li>Word-optimized versions with larger fonts (*_WORD_COMPACT.png)</li>
+    </ul>
+    
+    <h5>Required Python Libraries:</h5>
+    <ul>
+        <li>matplotlib, seaborn, pandas, numpy</li>
+        <li>scipy, scikit-learn</li>
+        <li>plotly (optional - for interactive plots)</li>
+        <li>networkx (optional - for network analysis)</li>
+    </ul>
+    
+    <div class="code-block-container">
+        <div class="code-block-header">
+            <span class="code-language">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre class="code-block"># Run advanced visualizations
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps advanced_visualizations \
+  --batch_size 1 \
+  --cpus 8 \
+  --memory "32G" \
+  --time "0-04:00:00" \
+  --log_dir ./logs
+
+# With output suffix for organization
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps advanced_visualizations \
+  --viz_output_suffix "_final" \
+  --batch_size 1 \
+  --cpus 8 \
+  --memory "32G" \
+  --time "0-04:00:00" \
+  --log_dir ./logs</pre>
+    </div>
+    
+    <div class="alert alert-info">
+        <span class="alert-icon">ℹ️</span>
+        <div>
+            <h4>Processing Notes</h4>
+            <ul>
+                <li>Runs all visualizations automatically in two phases</li>
+                <li>Phase 1: Analyzes all MAGs in the project</li>
+                <li>Phase 2: Creates separate visualizations for novel MAGs only</li>
+                <li>Use <code>--viz_output_suffix</code> to organize multiple runs</li>
+                <li>Large projects may take 2-4 hours to complete</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <h3>Running Complete Functional Annotation Pipeline</h3>
+    <div class="code-block-container">
+        <div class="code-block-header">
+            <span class="code-language">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre class="code-block"># Run all functional annotation steps sequentially
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps eggnog_annotation dbcan_annotation functional_analysis \
+  --mags_dir /path/to/final_mags \
+  --kegg_db_file /path/to/ko.txt \
+  --batch_size 1 \
+  --cpus 32 \
+  --memory "64G" \
+  --time "0-18:00:00" \
+  --log_dir ./logs</pre>
+    </div>
+</section>
+
+<!-- Abundance Estimation Section - Add after Novel MAGs section -->
+<section id="abundance">
+    <h2>Step 10: Abundance Estimation</h2>
+    
+    <div class="alert alert-info">
+        <span class="alert-icon">ℹ️</span>
+        <div>
+            <h4>Comprehensive Abundance Analysis Pipeline</h4>
+            <p>This step performs taxonomic classification and abundance estimation using your 
+            custom Kraken2 database (with novel MAGs) and Bracken for accurate abundance quantification.</p>
+        </div>
+    </div>
+
+    <h3>Prerequisites</h3>
+    <div class="requirements-box">
+        <h5>Required Before Running:</h5>
+        <ul>
+            <li>✅ Host removal completed (Step 2b)</li>
+            <li>✅ Kraken2 database built (Step 8.4)</li>
+            <li>✅ Bracken database files exist (built with Step 8.4)</li>
+        </ul>
+    </div>
+
+    <h3>Option 1: Single Sample Kraken Classification</h3>
+    <div class="step-card">
+        <h5>What it does:</h5>
+        <ul>
+            <li>Runs Kraken2 classification on individual samples</li>
+            <li>Generates per-sample classification reports</li>
+            <li>Simple classification without abundance refinement</li>
+        </ul>
+        
+        <h5>Key Outputs:</h5>
+        <ul>
+            <li>Kraken_Abundance/{sample}_kraken.txt - Raw classifications</li>
+            <li>Kraken_Abundance/{sample}_kreport.txt - Kraken reports</li>
+        </ul>
+        
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block">python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps kraken_abundance \
+  --kraken_db_path /path/to/kraken_db \
+  --batch_size 10 \
+  --cpus 16 \
+  --memory "32G" \
+  --time "0-04:00:00" \
+  --log_dir ./logs</pre>
+        </div>
+    </div>
+
+    <h3>Option 2: Comprehensive Abundance Estimation (Recommended)</h3>
+    <div class="step-card">
+        <h5>What it does:</h5>
+        <ul>
+            <li>Runs Kraken2 classification on all samples</li>
+            <li>Refines abundances using Bracken at multiple taxonomic levels</li>
+            <li>Combines results into abundance matrices</li>
+            <li>Generates comprehensive visualizations</li>
+            <li>Creates interactive HTML dashboard</li>
+            <li>Supports smart checkpointing (skips completed steps)</li>
+        </ul>
+        
+        <h5>Key Features:</h5>
+        <ul>
+            <li><strong>Smart Checkpointing:</strong> Automatically skips already completed steps</li>
+            <li><strong>Multiple Taxonomic Levels:</strong> Analyzes at Species, Genus, etc.</li>
+            <li><strong>Metadata Integration:</strong> Group comparisons if metadata provided</li>
+            <li><strong>Automatic Visualizations:</strong> 8+ plot types generated</li>
+        </ul>
+        
+        <h5>Key Outputs:</h5>
+        <ul>
+            <li><strong>Kraken_Abundance/</strong> - Raw Kraken2 outputs</li>
+            <li><strong>Bracken_Abundance_{level}/</strong> - Bracken estimates per taxonomic level</li>
+            <li><strong>Merged_Bracken_Outputs/</strong> - Combined abundance matrices
+                <ul>
+                    <li>merged_bracken_S.txt - Species abundances</li>
+                    <li>merged_bracken_G.txt - Genus abundances</li>
+                </ul>
+            </li>
+            <li><strong>Abundance_Plots/</strong> - Visualizations
+                <ul>
+                    <li>Top taxa barplots</li>
+                    <li>Abundance heatmaps with clustering</li>
+                    <li>PCA analysis plots</li>
+                    <li>Alpha diversity metrics (Shannon, Simpson, Richness)</li>
+                    <li>Stacked composition plots</li>
+                    <li>Group comparison boxplots (if metadata provided)</li>
+                    <li>Beta diversity analysis (if metadata provided)</li>
+                </ul>
+            </li>
+            <li><strong>abundance_summary.html</strong> - Interactive dashboard</li>
+        </ul>
+        
+        <h5>Basic Usage (without metadata):</h5>
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block">python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps abundance_estimation \
+  --kraken_db_path /path/to/kraken_db \
+  --batch_size 50 \
+  --cpus 32 \
+  --memory "64G" \
+  --time "0-06:00:00" \
+  --log_dir ./logs</pre>
+        </div>
+        
+        <h5>Advanced Usage (with metadata for group comparisons):</h5>
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block">python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps abundance_estimation \
+  --kraken_db_path /path/to/kraken_db \
+  --taxonomic_levels S G F \
+  --read_length 150 \
+  --threshold 10 \
+  --metadata_file /path/to/metadata.csv \
+  --batch_size 50 \
+  --cpus 32 \
+  --memory "64G" \
+  --time "0-06:00:00" \
+  --log_dir ./logs</pre>
+        </div>
+        
+        <h5>Metadata File Format:</h5>
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">csv</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block">Sample,Treatment
+Sample_001,Control
+Sample_002,Control
+Sample_003,Treatment_A
+Sample_004,Treatment_A
+Sample_005,Treatment_B</pre>
+        </div>
+        
+        <div class="alert alert-warning">
+            <span class="alert-icon">⚠️</span>
+            <div>
+                <h4>Important Notes</h4>
+                <ul>
+                    <li><strong>Kraken Database Path:</strong> Must point to the database built in Step 8.4</li>
+                    <li><strong>Bracken Requirements:</strong> Database must have kmer distribution files 
+                    (database{read_length}mers.kmer_distrib)</li>
+                    <li><strong>Input Files:</strong> Uses host-removed reads from Host_Removal directory</li>
+                    <li><strong>Taxonomic Levels:</strong> S=Species, G=Genus, F=Family, O=Order, C=Class, P=Phylum</li>
+                    <li><strong>Force Rerun:</strong> Delete output directories to force re-execution if needed</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <h3>Parameters Explained</h3>
+    <div class="step-card">
+        <h5>Configurable Parameters:</h5>
+        <ul>
+            <li><code>--kraken_db_path</code> (Required): Path to Kraken2 database</li>
+            <li><code>--taxonomic_levels</code>: List of levels to analyze (default: S G)</li>
+            <li><code>--read_length</code>: Read length for Bracken (default: 150)</li>
+            <li><code>--threshold</code>: Minimum reads for Bracken classification (default: 10)</li>
+            <li><code>--metadata_file</code>: CSV with Sample and Treatment columns (optional)</li>
+        </ul>
+        
+        <h5>Resource Recommendations:</h5>
+        <ul>
+            <li><strong>CPUs:</strong> 16-32 (Kraken2 is highly parallel)</li>
+            <li><strong>Memory:</strong> 32-64GB (depends on database size)</li>
+            <li><strong>Time:</strong> 4-6 hours for 50 samples</li>
+        </ul>
+    </div>
+
+    <h3>Visualization Examples</h3>
+    <div class="step-card">
+        <h5>Generated Visualizations Include:</h5>
+        <ol>
+            <li><strong>Top Taxa Barplot:</strong> Shows most abundant species/genera</li>
+            <li><strong>Abundance Heatmap:</strong> Hierarchical clustering of samples and taxa</li>
+            <li><strong>PCA Analysis:</strong> Sample relationships based on composition</li>
+            <li><strong>Diversity Metrics:</strong> Shannon, Simpson, and Richness indices</li>
+            <li><strong>Stacked Composition:</strong> Relative abundances per sample</li>
+            <li><strong>Group Comparisons:</strong> Statistical comparisons between treatments (if metadata)</li>
+            <li><strong>Beta Diversity:</strong> Within vs between group distances (if metadata)</li>
+        </ol>
+    </div>
+</section>
+
+
+<!-- Phylogenetic Tree Section -->
+<section id="phylogenetic-tree">
+    <h2>Step 11: Phylogenetic Tree Generation and Visualization</h2>
+    
+    <div class="alert alert-info">
+        <span class="alert-icon">ℹ️</span>
+        <div>
+            <h4>Optional Advanced Analysis</h4>
+            <p>Generate custom phylogenetic trees and create publication-quality visualizations 
+            with integrated taxonomic and functional annotations.</p>
+        </div>
+    </div>
+
+    <h3>Step 11a: Generate Phylogenetic Tree</h3>
+    <div class="step-card">
+        <h5>What it does:</h5>
+        <ul>
+            <li>Builds custom phylogenetic tree using GTDB-Tk de_novo_wf</li>
+            <li>Uses only user MAGs (excludes GTDB reference genomes)</li>
+            <li>Requires outgroup taxon for proper tree rooting</li>
+            <li>Creates standardized tree files for visualization</li>
+        </ul>
+        
+        <h5>Requirements:</h5>
+        <ul>
+            <li>Must complete GTDB-Tk classification (Step 6) first</li>
+            <li>Requires dereplicated MAGs from dRep</li>
+            <li>Outgroup taxon must be specified</li>
+        </ul>
+        
+        <h5>Key Outputs:</h5>
+        <ul>
+            <li>Phylogeny/gtdbtk/taxonomy2/gtdbtk.tree - Main tree file</li>
+            <li>Phylogeny/gtdbtk/taxonomy2/trees/ - All tree files</li>
+            <li>custom_taxonomy.txt - Taxonomy mapping file</li>
+        </ul>
+        
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block">python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps mags_tree \
+  --mags_dir $WORK_DIR/Bin_Refinement/drep/dRep_output/dereplicated_genomes \
+  --outgroup_taxon "p__Firmicutes" \
+  --batch_size 1 \
+  --cpus 32 \
+  --memory "100G" \
+  --time "0-06:00:00" \
+  --log_dir ./logs</pre>
+        </div>
+        
+        <div class="alert alert-warning">
+            <span class="alert-icon">⚠️</span>
+            <div>
+                <h4>Outgroup Selection</h4>
+                <p>Choose an appropriate outgroup taxon based on your data:</p>
+                <ul>
+                    <li><code>p__Firmicutes</code> - Common for Bacteroidetes-rich samples</li>
+                    <li><code>c__Bacilli</code> - More specific class-level outgroup</li>
+                    <li><code>p__Proteobacteria</code> - For Firmicutes-dominated samples</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <h3>Step 11b: Basic Tree Visualization</h3>
+    <div class="step-card">
+        <h5>What it does:</h5>
+        <ul>
+            <li>Creates basic circular phylogenetic tree visualization</li>
+            <li>Adds taxonomic information as colored rings</li>
+            <li>Generates publication-ready PDF output</li>
+        </ul>
+        
+        <h5>Key Outputs:</h5>
+        <ul>
+            <li>tree_visualization.pdf - Basic circular tree</li>
+        </ul>
+        
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block">python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps tree_visualization \
+  --taxonomy_source $WORK_DIR/Novel_Mags/gtdbtk/gtdbtk.bac120.summary.tsv \
+  --batch_size 1 \
+  --cpus 8 \
+  --memory "32G" \
+  --time "0-02:00:00" \
+  --log_dir ./logs</pre>
+        </div>
+    </div>
+
+    <h3>Step 11c: Enhanced Tree Visualization with Functional Annotations</h3>
+    <div class="step-card">
+        <h5>What it does:</h5>
+        <ul>
+            <li>Creates multiple publication-quality tree visualizations</li>
+            <li>Integrates taxonomic, functional, and novel MAG information</li>
+            <li>Generates 4 different visualization types automatically</li>
+            <li>Adds functional annotation as pie charts or rings</li>
+        </ul>
+        
+        <h5>Visualization Types Created:</h5>
+        <ul>
+            <li><strong>Simplified Taxonomic</strong> (_simplified_taxonomic.pdf)
+                <ul>
+                    <li>Circular tree with phylum and genus rings only</li>
+                    <li>Novel MAG highlighting with red stars</li>
+                </ul>
+            </li>
+            <li><strong>Rectangular Tree</strong> (_rectangular_tree.pdf)
+                <ul>
+                    <li>Rectangular layout with colored taxonomy strips</li>
+                    <li>Enhanced fonts for publication quality</li>
+                </ul>
+            </li>
+            <li><strong>Multi-functional</strong> (_multi_functional.pdf)
+                <ul>
+                    <li>Circular tree with CAZyme, COG, and KEGG pie charts</li>
+                    <li>Multiple annotation rings</li>
+                </ul>
+            </li>
+            <li><strong>Enhanced Beautiful</strong> (_enhanced_beautiful.pdf)
+                <ul>
+                    <li>Single functional annotation focus</li>
+                    <li>CAZyme category pie charts</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h5>Key Outputs:</h5>
+        <ul>
+            <li>Phylogeny/gtdbtk/taxonomy2/enhanced_visualizations/ - All visualization files</li>
+            <li>enhanced_visualizations_finalrec/ - Rectangular and simplified trees</li>
+            <li>enhanced_visualizations_pie/ - Pie chart visualizations</li>
+        </ul>
+        
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block"># Full enhanced visualization with all annotations
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps enhanced_tree_visualization \
+  --taxonomy_source $WORK_DIR/Novel_Mags/gtdbtk/gtdbtk.bac120.summary.tsv \
+  --novel_mags_file $WORK_DIR/Novel_Mags/novel_mags_list.txt \
+  --cazyme_annotations $WORK_DIR/Functional_Annotation/cazyme_summary.xlsx \
+  --cog_annotations $WORK_DIR/Functional_Annotation/cog_summary.xlsx \
+  --kegg_annotations $WORK_DIR/Functional_Annotation/kegg_summary.xlsx \
+  --annotation_type auto \
+  --batch_size 1 \
+  --cpus 8 \
+  --memory "32G" \
+  --time "0-02:00:00" \
+  --log_dir ./logs
+
+# Simplified version with only CAZyme annotations
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps enhanced_tree_visualization \
+  --taxonomy_source $WORK_DIR/Novel_Mags/gtdbtk/gtdbtk.bac120.summary.tsv \
+  --cazyme_annotations $WORK_DIR/Functional_Annotation/cazyme_summary.xlsx \
+  --batch_size 1 \
+  --cpus 8 \
+  --memory "32G" \
+  --time "0-02:00:00" \
+  --log_dir ./logs</pre>
+        </div>
+        
+        <div class="alert alert-info">
+            <span class="alert-icon">ℹ️</span>
+            <div>
+                <h4>Optional Parameters</h4>
+                <ul>
+                    <li><code>--novel_mags_file</code>: Text file with novel MAG IDs (one per line)</li>
+                    <li><code>--functional_annotations</code>: Path to annotation directory (auto-detected)</li>
+                    <li><code>--annotation_type</code>: auto, eggnog, kegg, or dbcan</li>
+                    <li>Can provide any combination of cazyme, cog, and kegg annotations</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="requirements-box">
+        <h5>🔧 R Environment Requirements</h5>
+        <p>The visualization steps require R with specific packages:</p>
+        <ul>
+            <li><strong>Required:</strong> ape, RColorBrewer, jsonlite</li>
+            <li><strong>Optional (enhanced):</strong> ggtree, ggplot2</li>
+        </ul>
+        <p>Install R packages:</p>
+        <div class="code-block-container">
+            <div class="code-block-header">
+                <span class="code-language">R</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre class="code-block">install.packages(c("ape", "RColorBrewer", "jsonlite"))
+# For enhanced visualizations (optional):
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("ggtree")</pre>
+        </div>
+    </div>
+
+    <div class="best-practices">
+        <h4>💡 Best Practices</h4>
+        <ul>
+            <li>Always run GTDB-Tk classification before tree generation</li>
+            <li>Use dereplicated MAGs for cleaner trees</li>
+            <li>Choose outgroup taxon from a distantly related phylum</li>
+            <li>Run functional annotation steps before enhanced visualization</li>
+            <li>Create novel_mags_list.txt from identify_novel_mags output</li>
+            <li>Use higher memory (32-64GB) for large trees (>100 MAGs)</li>
+        </ul>
+    </div>
+</section>
+
+<!-- Update the Complete Pipeline Script to include tree visualization -->
+<!-- In the complete example section, add after Step 6: -->
+
+<div class="code-block-container">
+    <div class="code-block-header">
+        <span class="code-language">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <pre class="code-block"># Step 6.5: Phylogenetic Tree (Optional)
+echo "Generating phylogenetic tree..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps mags_tree \
+  --mags_dir $WORK_DIR/Bin_Refinement/drep/dRep_output/dereplicated_genomes \
+  --outgroup_taxon "p__Firmicutes" \
+  --batch_size 1 \
+  --cpus 32 \
+  --memory "100G" \
+  --time "0-06:00:00" \
+  --log_dir $LOG_DIR
+
+echo "Creating enhanced tree visualizations..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps enhanced_tree_visualization \
+  --taxonomy_source $WORK_DIR/Novel_Mags/gtdbtk/gtdbtk.bac120.summary.tsv \
+  --novel_mags_file $WORK_DIR/Novel_Mags/novel_mags_list.txt \
+  --cazyme_annotations $WORK_DIR/Functional_Annotation/cazyme_summary.xlsx \
+  --batch_size 1 \
+  --cpus 8 \
+  --memory "32G" \
+  --time "0-02:00:00" \
+  --log_dir $LOG_DIR</pre>
+</div>
+
+<!-- Complete Example Section -->
+<section id="example-script">
+    <h2>Complete Pipeline Script</h2>
+    
+    <div class="alert alert-info">
+        <span class="alert-icon">ℹ️</span>
+        <div>
+            <h4>Comprehensive Pipeline Script</h4>
+            <p>This script includes all pipeline steps with proper parameters. Uncomment the sections you need and adjust paths/parameters for your project.</p>
+        </div>
+    </div>
+    
+    <div class="code-block-container">
+        <div class="code-block-header">
+            <span class="code-language">bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre class="code-block">#!/bin/bash
+#SBATCH -p ghpc
+#SBATCH -N 1
+#SBATCH -n 1
+#SBATCH --mem=200G
+#SBATCH -t 15-00:00:00
+#SBATCH --output=pipeline_complete_%j.out
+#SBATCH --error=pipeline_complete_%j.err
+
+# ============================================================================
+# Complete MetaMAG Explorer Pipeline
+# Version: 1.0.0
+# ============================================================================
+
+# CRITICAL: Set environment
+CONDA_ENV="/your/path/miniconda3/bin/activate metamag"
+METAMAG_DIR="/path/to/MetaMAG-1.0.0"
+cd $METAMAG_DIR
+source $CONDA_ENV
+
+# === Core Variables (MODIFY THESE) ===
+WORK_DIR="/path/to/project"
+SAMPLES="/path/to/samples.txt"
+PROJECT_CONFIG="/path/to/project_config.yaml"
+REFERENCE="/path/to/host_genome.fa"
+LOG_DIR="$WORK_DIR/logs"
+mkdir -p $LOG_DIR
+
+# === Database Paths ===
+KRAKEN_DB="/path/to/kraken_db"
+KEGG_DB="/path/to/ko.txt"
+GTDBTK_DB="/path/to/gtdb/release"
+
+# === Optional: Rumen-specific paths ===
+RUMEN_REF_DIR="/path/to/rumen/reference_mags"
+RUMEN_ADDED_DIR="/path/to/rumen/added_mags"
+DATASET_DIR="/path/to/store/reference_mags"
+
+echo "=========================================="
+echo "Starting MetaMAG Explorer Pipeline"
+echo "Project: $WORK_DIR"
+echo "Date: $(date)"
+echo "=========================================="
+
+# ============================================================================
+# PHASE 1: QUALITY CONTROL & PREPROCESSING
+# ============================================================================
+
+# Step 1.1: Quality Control
+echo "[$(date)] Step 1.1: Running QC..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps qc \
+  --batch_size 20 \
+  --cpus 4 \
+  --memory "8G" \
+  --time "0-02:00:00" \
+  --log_dir $LOG_DIR
+
+# Step 1.2: MultiQC Report
+echo "[$(date)] Step 1.2: Running MultiQC..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps multiqc \
+  --input_dir $WORK_DIR/QC \
+  --batch_size 1 \
+  --cpus 2 \
+  --memory "4G" \
+  --time "0-00:30:00" \
+  --log_dir $LOG_DIR
+
+# Step 2.1: Trimming
+echo "[$(date)] Step 2.1: Running trimming..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps trimming \
+  --batch_size 10 \
+  --cpus 8 \
+  --memory "16G" \
+  --time "0-04:00:00" \
+  --log_dir $LOG_DIR
+
+# Step 2.2: Host Removal
+echo "[$(date)] Step 2.2: Running host removal..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps host_removal \
+  --reference $REFERENCE \
+  --batch_size 10 \
+  --cpus 16 \
+  --memory "32G" \
+  --time "0-06:00:00" \
+  --log_dir $LOG_DIR
+
+# ============================================================================
+# PHASE 2: ASSEMBLY
+# ============================================================================
+
+# Step 3.1: Single Assembly (IDBA-UD)
+echo "[$(date)] Step 3.1: Running single assembly..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps single_assembly \
+  --batch_size 5 \
+  --cpus 32 \
+  --memory "100G" \
+  --time "1-00:00:00" \
+  --log_dir $LOG_DIR
+
+# Step 3.2: Co-Assembly (MEGAHIT)
+echo "[$(date)] Step 3.2: Running co-assembly..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps co_assembly \
+  --batch_size 50 \
+  --cpus 64 \
+  --memory "200G" \
+  --time "2-00:00:00" \
+  --log_dir $LOG_DIR
+
+# ============================================================================
+# PHASE 3: BINNING & REFINEMENT
+# ============================================================================
+
+# Step 4.1: Binning
+echo "[$(date)] Step 4.1: Running binning..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps single_binning \
+  --binning_methods metabat2 maxbin2 concoct \
+  --batch_size 10 \
+  --cpus 32 \
+  --memory "64G" \
+  --time "0-12:00:00" \
+  --log_dir $LOG_DIR
+
+# Step 4.2: Bin Refinement with DAS Tool
+echo "[$(date)] Step 4.2: Running bin refinement..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps single_bin_refinement \
+  --score_threshold 0.5 \
+  --batch_size 10 \
+  --cpus 32 \
+  --memory "64G" \
+  --time "0-06:00:00" \
+  --log_dir $LOG_DIR
+
+# ============================================================================
+# PHASE 4: QUALITY ASSESSMENT & DEREPLICATION
+# ============================================================================
+
+# Step 5.1: Quality Assessment with CheckM
+echo "[$(date)] Step 5.1: Running CheckM evaluation..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps evaluation \
+  --batch_size 50 \
+  --cpus 32 \
+  --memory "64G" \
+  --time "0-06:00:00" \
+  --log_dir $LOG_DIR
+
+# Step 5.2: Dereplication with dRep
+echo "[$(date)] Step 5.2: Running dRep..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps dRep \
+  --batch_size 50 \
+  --cpus 32 \
+  --memory "64G" \
+  --time "0-06:00:00" \
+  --log_dir $LOG_DIR
+
+# ============================================================================
+# PHASE 5: TAXONOMIC CLASSIFICATION
+# ============================================================================
+
+# Step 6: GTDB-Tk Classification
+echo "[$(date)] Step 6: Running GTDB-Tk..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps gtdbtk \
+  --batch_size 1 \
+  --cpus 64 \
+  --memory "200G" \
+  --time "0-06:00:00" \
+  --log_dir $LOG_DIR
+
+# ============================================================================
+# PHASE 6: RUMEN REFERENCE MAGs (OPTIONAL - for rumen microbiome projects)
+# ============================================================================
+
+# # Step 7.1: Download Rumen Reference MAGs
+# echo "[$(date)] Step 7.1: Downloading rumen reference MAGs..."
+# python3 -m MetaMAG.main \
+#   --project_config $PROJECT_CONFIG \
+#   --steps rumen_refmags_download \
+#   --dataset_dir $DATASET_DIR \
+#   --batch_size 1 \
+#   --cpus 4 \
+#   --memory "16G" \
+#   --time "0-12:00:00" \
+#   --log_dir $LOG_DIR
+
+# # Step 7.2: Dereplicate Reference MAGs
+# echo "[$(date)] Step 7.2: Dereplicating reference MAGs..."
+# python3 -m MetaMAG.main \
+#   --project_config $PROJECT_CONFIG \
+#   --steps rumen_refmags_drep \
+#   --dataset_dir $DATASET_DIR \
+#   --drep_output_dir $RUMEN_REF_DIR/drep_output \
+#   --batch_size 1 \
+#   --cpus 32 \
+#   --memory "100G" \
+#   --time "1-00:00:00" \
+#   --log_dir $LOG_DIR
+
+# # Step 7.3: Classify Reference MAGs
+# echo "[$(date)] Step 7.3: Classifying reference MAGs..."
+# python3 -m MetaMAG.main \
+#   --project_config $PROJECT_CONFIG \
+#   --steps rumen_refmags_gtdbtk \
+#   --genome_dir $RUMEN_REF_DIR/drep_output/dereplicated_genomes \
+#   --gtdbtk_out_dir $RUMEN_REF_DIR/gtdbtk_output \
+#   --novel_output_dir $RUMEN_REF_DIR/novel_mags \
+#   --genome_extension ".fa" \
+#   --batch_size 1 \
+#   --cpus 64 \
+#   --memory "200G" \
+#   --time "0-06:00:00" \
+#   --log_dir $LOG_DIR
+
+# # Step 7.4: Integrate with Project MAGs
+# echo "[$(date)] Step 7.4: Integrating with reference MAGs..."
+# python3 -m MetaMAG.main \
+#   --project_config $PROJECT_CONFIG \
+#   --samples-file $SAMPLES \
+#   --steps rumen_drep \
+#   --ref_mags_dir $RUMEN_REF_DIR/drep_output/dereplicated_genomes \
+#   --batch_size 1 \
+#   --cpus 32 \
+#   --memory "100G" \
+#   --time "0-12:00:00" \
+#   --log_dir $LOG_DIR
+
+# ============================================================================
+# PHASE 7: NOVEL MAG PROCESSING
+# ============================================================================
+
+# Step 8.1: Identify Novel MAGs
+echo "[$(date)] Step 8.1: Identifying novel MAGs..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps identify_novel_mags \
+  --custom_gtdbtk_dir $WORK_DIR/Novel_Mags/gtdbtk \
+  --batch_size 1 \
+  --cpus 8 \
+  --memory "32G" \
+  --time "0-02:00:00" \
+  --log_dir $LOG_DIR
+
+# Step 8.2: Process Novel MAGs (General data)
+echo "[$(date)] Step 8.2: Processing novel MAGs..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps process_novel_mags \
+  --kraken_db_path $KRAKEN_DB \
+  --merge_mode \
+  --batch_size 1 \
+  --cpus 64 \
+  --memory "128G" \
+  --time "0-12:00:00" \
+  --log_dir $LOG_DIR
+
+# # For rumen data, use this instead:
+# python3 -m MetaMAG.main \
+#   --project_config $PROJECT_CONFIG \
+#   --steps process_novel_mags \
+#   --is_rumen_data \
+#   --rumen_ref_mags_dir $RUMEN_REF_DIR \
+#   --rumen_added_mags_dir $RUMEN_ADDED_DIR \
+#   --kraken_db_path $KRAKEN_DB \
+#   --merge_mode \
+#   --batch_size 1 \
+#   --cpus 64 \
+#   --memory "128G" \
+#   --time "0-12:00:00" \
+#   --log_dir $LOG_DIR
+
+# Step 8.3: Add MAGs to Repository
+echo "[$(date)] Step 8.3: Adding MAGs to repository..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps add_mags_to_repo \
+  --batch_size 1 \
+  --cpus 8 \
+  --memory "16G" \
+  --time "0-01:00:00" \
+  --log_dir $LOG_DIR
+
+# Step 8.4: Build/Update Kraken Database
+echo "[$(date)] Step 8.4: Building Kraken database..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps build_kraken_db \
+  --kraken_db_path $KRAKEN_DB \
+  --batch_size 1 \
+  --cpus 64 \
+  --memory "200G" \
+  --time "1-00:00:00" \
+  --log_dir $LOG_DIR
+
+# ============================================================================
+# PHASE 8: FUNCTIONAL ANNOTATION
+# ============================================================================
+
+# Step 9.1: EggNOG Annotation
+echo "[$(date)] Step 9.1: Running EggNOG annotation..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps eggnog_annotation \
+  --mags_dir $WORK_DIR/Bin_Refinement/drep/dRep_output/dereplicated_genomes \
+  --batch_size 1 \
+  --cpus 32 \
+  --memory "64G" \
+  --time "0-12:00:00" \
+  --log_dir $LOG_DIR
+
+# Step 9.2: dbCAN CAZyme Annotation
+echo "[$(date)] Step 9.2: Running dbCAN annotation..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps dbcan_annotation \
+  --mags_dir $WORK_DIR/Bin_Refinement/drep/dRep_output/dereplicated_genomes \
+  --batch_size 1 \
+  --cpus 32 \
+  --memory "32G" \
+  --time "0-06:00:00" \
+  --log_dir $LOG_DIR
+
+# Step 9.3: Integrated Functional Analysis
+echo "[$(date)] Step 9.3: Running functional analysis..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps functional_analysis \
+  --kegg_db_file $KEGG_DB \
+  --batch_size 1 \
+  --cpus 8 \
+  --memory "32G" \
+  --time "0-02:00:00" \
+  --log_dir $LOG_DIR
+
+# Step 9.4: Advanced Visualizations
+echo "[$(date)] Step 9.4: Creating advanced visualizations..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps advanced_visualizations \
+  --viz_output_suffix "_final" \
+  --batch_size 1 \
+  --cpus 8 \
+  --memory "32G" \
+  --time "0-04:00:00" \
+  --log_dir $LOG_DIR
+
+# ============================================================================
+# PHASE 9: ABUNDANCE ESTIMATION
+# ============================================================================
+
+# Step 10: Comprehensive Abundance Estimation
+echo "[$(date)] Step 10: Running abundance estimation..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --samples-file $SAMPLES \
+  --steps abundance_estimation \
+  --kraken_db_path $KRAKEN_DB \
+  --taxonomic_levels S G F \
+  --read_length 150 \
+  --threshold 10 \
+  --batch_size 50 \
+  --cpus 32 \
+  --memory "64G" \
+  --time "0-06:00:00" \
+  --log_dir $LOG_DIR
+
+# # With metadata for group comparisons:
+# python3 -m MetaMAG.main \
+#   --project_config $PROJECT_CONFIG \
+#   --samples-file $SAMPLES \
+#   --steps abundance_estimation \
+#   --kraken_db_path $KRAKEN_DB \
+#   --taxonomic_levels S G F \
+#   --metadata_file $WORK_DIR/metadata.csv \
+#   --batch_size 50 \
+#   --cpus 32 \
+#   --memory "64G" \
+#   --time "0-06:00:00" \
+#   --log_dir $LOG_DIR
+
+# ============================================================================
+# PHASE 10: PHYLOGENETIC ANALYSIS (OPTIONAL)
+# ============================================================================
+
+# Step 11.1: Generate Phylogenetic Tree
+echo "[$(date)] Step 11.1: Generating phylogenetic tree..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps mags_tree \
+  --mags_dir $WORK_DIR/Bin_Refinement/drep/dRep_output/dereplicated_genomes \
+  --outgroup_taxon "p__Firmicutes" \
+  --batch_size 1 \
+  --cpus 32 \
+  --memory "100G" \
+  --time "0-06:00:00" \
+  --log_dir $LOG_DIR
+
+# Step 11.2: Basic Tree Visualization
+echo "[$(date)] Step 11.2: Creating basic tree visualization..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps tree_visualization \
+  --taxonomy_source $WORK_DIR/Novel_Mags/gtdbtk/gtdbtk.bac120.summary.tsv \
+  --batch_size 1 \
+  --cpus 8 \
+  --memory "32G" \
+  --time "0-02:00:00" \
+  --log_dir $LOG_DIR
+
+# Step 11.3: Enhanced Tree Visualization with Annotations
+echo "[$(date)] Step 11.3: Creating enhanced tree visualizations..."
+python3 -m MetaMAG.main \
+  --project_config $PROJECT_CONFIG \
+  --steps enhanced_tree_visualization \
+  --taxonomy_source $WORK_DIR/Novel_Mags/gtdbtk/gtdbtk.bac120.summary.tsv \
+  --novel_mags_file $WORK_DIR/Novel_Mags/novel_mags_list.txt \
+  --cazyme_annotations $WORK_DIR/Functional_Annotation/cazyme_summary.xlsx \
+  --cog_annotations $WORK_DIR/Functional_Annotation/cog_summary.xlsx \
+  --kegg_annotations $WORK_DIR/Functional_Annotation/kegg_summary.xlsx \
+  --annotation_type auto \
+  --batch_size 1 \
+  --cpus 8 \
+  --memory "32G" \
+  --time "0-02:00:00" \
+  --log_dir $LOG_DIR
+
+# ============================================================================
+# PIPELINE COMPLETE
+# ============================================================================
+
+echo "=========================================="
+echo "MetaMAG Explorer Pipeline Complete!"
+echo "End time: $(date)"
+echo "Output directory: $WORK_DIR"
+echo ""
+echo "Key outputs:"
+echo "  - QC reports: $WORK_DIR/QC"
+echo "  - Assemblies: $WORK_DIR/Assembly"
+echo "  - MAGs: $WORK_DIR/Bin_Refinement/drep/dRep_output/dereplicated_genomes"
+echo "  - Taxonomy: $WORK_DIR/Novel_Mags/gtdbtk"
+echo "  - Annotations: $WORK_DIR/Functional_Annotation"
+echo "  - Abundances: $WORK_DIR/Kraken_Abundance"
+echo "  - Visualizations: $WORK_DIR/Advanced_visualizations_final"
+echo "=========================================="</pre>
+    </div>
+    
+    <div class="alert alert-success">
+        <span class="alert-icon">✅</span>
+        <div>
+            <h4>Script Usage Tips</h4>
+            <ul>
+                <li>Comment out steps you don't need (use # at the beginning of lines)</li>
+                <li>Uncomment optional sections like rumen processing if needed</li>
+                <li>Adjust SLURM parameters (#SBATCH lines) based on your cluster</li>
+                <li>Modify resource allocations (cpus, memory, time) per step as needed</li>
+                <li>Check that all database paths are correctly set before running</li>
+                <li>Consider running phases separately for better monitoring</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="best-practices">
+        <h4>💡 Recommended Workflow Execution</h4>
+        <ol>
+            <li><strong>Phase 1-2:</strong> QC, Preprocessing, Assembly (1-2 days)</li>
+            <li><strong>Phase 3-4:</strong> Binning, Quality Assessment (1 day)</li>
+            <li><strong>Phase 5-7:</strong> Taxonomy, Novel MAGs (1 day)</li>
+            <li><strong>Phase 8:</strong> Functional Annotation (1 day)</li>
+            <li><strong>Phase 9-10:</strong> Abundance, Phylogenetics (1 day)</li>
+        </ol>
+        <p>Total estimated time: 5-7 days for a complete run with 50-100 samples</p>
+    </div>
+</section>
+
+
+
+
+
+
+
+<!-- Troubleshooting Section -->
+<section id="troubleshooting">
+    <h2>Troubleshooting</h2>
+    
+    <div class="alert alert-info">
+        <span class="alert-icon">💡</span>
+        <div>
+            <h4>Common Troubleshooting Steps</h4>
+            <ul>
+                <li>Check log files in <code>$LOG_DIR</code></li>
+                <li>Verify input data quality</li>
+                <li>Ensure all dependencies are installed</li>
+                <li>Adjust computational resources as needed</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+
+            <!-- Navigation Buttons -->
+            <div class="nav-buttons">
+                <a href="installation.html" class="btn btn-secondary">
+                    ← Installation Guide
+                </a>
+                <a href="https://github.com/yourusername/MetaMAG-Explorer" class="btn btn-primary">
+                    View on GitHub →
+                </a>
+            </div>
+        </article>
+    </div>
+
+    <script>
+        // Copy code functionality
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block-container').querySelector('.code-block');
+            const textToCopy = codeBlock.textContent;
+            
+            navigator.clipboard.writeText(textToCopy).then(function() {
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // Smooth scrolling
+        document.querySelectorAll('.sidebar a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (this.getAttribute('href').startsWith('#')) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    
+                    document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    if (targetSection) {
+                        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

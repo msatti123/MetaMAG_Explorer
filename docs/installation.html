@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetaMAG Explorer - Installation Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --dark: #1f2937;
+            --light: #f3f4f6;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary-color: #5e35b1;
+            --secondary-color: #4fc3f7;
+            --tertiary-color: #26a69a;
+            --accent-color: #ff6b6b;
+            --light-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --dark-text: #2d3436;
+            --light-text: #ffffff;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #fafafa;
+        }
+		
+		/* Navigation - Matching User Guide */
+        nav {
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links .active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 2px;
+        }
+
+        /* Header - Matching User Guide */
+        .header {
+            background: var(--gradient);
+            color: var(--white);
+            padding: 100px 0 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--white);
+            opacity: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: var(--tertiary-color);
+            margin: 30px 0 20px;
+        }
+
+        h4 {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            margin: 20px 0 15px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #636e72;
+            line-height: 1.8;
+        }
+
+        ul {
+            margin-bottom: 20px;
+            padding-left: 30px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            color: #636e72;
+        }
+
+        /* Note Box */
+        .note-box {
+            background: linear-gradient(135deg, rgba(103, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-left: 5px solid var(--primary-color);
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 8px;
+        }
+
+        .note-box h4 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        /* Code Blocks */
+        code {
+            background: #f1f3f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+            font-size: 0.9em;
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 25px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: 'bash';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--primary-color);
+            color: var(--light-text);
+            padding: 0.25rem 0.75rem;
+            border-radius: 0 8px 0 8px;
+            font-size: 0.8rem;
+            font-family: -apple-system, sans-serif;
+        }
+
+        /* Steps */
+        .step-number {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        th {
+            background: var(--primary-gradient);
+            color: var(--light-text);
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        tr:hover {
+            background: #f1f3f5;
+        }
+
+        /* Tool Categories Grid */
+        .tool-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .tool-category {
+            background: var(--light-bg);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .tool-category h5 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        /* Important Box */
+        .important-box {
+            background: #fee;
+            border-left: 5px solid #f66;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 8px;
+        }
+
+        .important-box::before {
+            content: '⚠️ ';
+            font-size: 1.2rem;
+        }
+
+        /* Success Box */
+        .success-box {
+            background: #e6ffed;
+            border-left: 5px solid #10b981;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 8px;
+        }
+
+        .success-box::before {
+            content: '✅ ';
+            font-size: 1.2rem;
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-btn-home {
+            background: var(--light);
+            color: var(--dark);
+            border: 2px solid var(--light);
+        }
+
+        .nav-btn-guide {
+            background: var(--primary);
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content-section {
+                padding: 25px;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            .tool-categories {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                MetaMAG Explorer
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#features">Features</a></li>
+                <li><a href="installation.html" class="active">Installation Guide</a></li>
+                <li><a href="user-guide.html">User Guide</a></li>
+            </ul>
+        </div>
+    </nav>
+	
+    <!-- Header -->	
+    <header class="header">
+        <h1>MetaMAG Explorer Installation Guide</h1>
+        <p>A Modular Pipeline for Novel MAG (Metagenome-Assembled Genome) Discovery and Metagenomic Profiling</p>
+    </header>
+	
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Configuration Files Overview -->
+      
+
+        <div class="content-section">
+            <h2>🖥️ System Requirements</h2>
+            
+            <h3>Hardware Requirements</h3>
+            <ul>
+                <li>Operating System: Linux (Ubuntu recommended)</li>
+                <li>Processor: Multiple cores (8+ recommended)</li>
+                <li>Memory: Minimum 16GB RAM (32GB+ recommended)</li>
+                <li>Storage: 100GB+ free space</li>
+            </ul>
+
+            <div class="note-box">
+                <h4>Notes</h4>
+                <p>Computational requirements vary based on:</p>
+                <ul>
+                    <li>Dataset size</li>
+                    <li>Analysis complexity</li>
+                    <li>Number of samples</li>
+                </ul>
+            </div>
+
+            <h3>Software Prerequisites</h3>
+            
+            <h4>Essential Software</h4>
+            
+            <p><strong>Conda Distribution:</strong></p>
+            <ul>
+                <li>Miniconda or Anaconda (64-bit)</li>
+                <li>Version: Latest stable release</li>
+            </ul>
+
+            <p><strong>Python:</strong></p>
+            <ul>
+                <li>Version: 3.8 or 3.9</li>
+                <li>64-bit distribution</li>
+                <li>Recommended: Conda-managed Python</li>
+            </ul>
+
+            <p><strong>Version Control:</strong></p>
+            <ul>
+                <li>Git (latest stable version)</li>
+                <li>GitHub CLI (optional)</li>
+            </ul>
+
+            <h4>Additional Recommended Tools</h4>
+            <ul>
+                <li>Wget or Curl</li>
+                <li>Build-essential packages</li>
+                <li>Make and CMake</li>
+            </ul>
+        </div>
+        
+		  <div class="content-section">
+            <h2>📁 Configuration Files Overview</h2>
+            
+            <div class="note-box">
+                <h4>Important: Two Configuration Files</h4>
+                <ul>
+                    <li><strong>config_example.py</strong>: Reference configuration with example tool paths. DO NOT edit this directly - use it as a template.</li>
+                    <li><strong>MetaMAG/config.py</strong>: Your actual configuration file (generated during setup). Edit this file to customize tool paths for your system.</li>
+                </ul>
+            </div>
+            
+            <p>The example configuration (<code>config_example.py</code>) shows the expected structure and typical installation paths for all tools. Use it as a reference when customizing your setup.</p>
+        </div>
+		
+		
+        <div class="content-section">
+            <h2>📦 Step-by-Step Installation</h2>
+
+            <h3><span class="step-number">1️⃣</span> Install Conda (if not already installed)</h3>
+            <div class="code-block">
+<pre># Download Miniconda installer
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+
+# Make installer executable
+chmod +x Miniconda3-latest-Linux-x86_64.sh
+
+# Run installer
+./Miniconda3-latest-Linux-x86_64.sh
+
+# Follow the prompts and restart your terminal
+source ~/.bashrc</pre>
+            </div>
+
+            <h3><span class="step-number">2️⃣</span> Clone the MetaMAG Repository</h3>
+            
+            <div class="important-box">
+                Replace <code>yourusername</code> with the actual GitHub username or organization hosting the repository.
+            </div>
+            
+            <h4>Clone Using Git (Recommended)</h4>
+            <div class="code-block">
+<pre># Clone the repository
+git clone https://github.com/[YOUR-GITHUB-USERNAME]/MetaMAG-Explorer.git
+
+# Navigate to the directory
+cd MetaMAG-Explorer</pre>
+            </div>
+
+            <h4>Download Using wget (Alternative)</h4>
+            <div class="code-block">
+<pre># Download the repository
+wget https://github.com/[YOUR-GITHUB-USERNAME]/MetaMAG-Explorer/archive/main.zip
+
+# Extract the archive
+unzip main.zip
+
+# Navigate to the directory
+cd MetaMAG-Explorer-main</pre>
+            </div>
+
+            <h3><span class="step-number">3️⃣</span> Review Example Configuration</h3>
+            <p>Before generating your configuration, review the example to understand the structure:</p>
+            <div class="code-block">
+<pre># View the example configuration
+cat config_example.py
+
+# This shows all required tools and their typical paths
+# You'll use this as a reference if tools aren't auto-detected</pre>
+            </div>
+
+            <h3><span class="step-number">4️⃣</span> Generate Your Configuration File</h3>
+            <p>Choose one of the following approaches based on your setup:</p>
+            
+            <h4>Option A: Use Existing Tools (if already installed)</h4>
+            <div class="code-block">
+<pre># Scan your system for existing tools and generate config
+python setup_tools.py --use-existing
+
+# This creates MetaMAG/config.py based on tools found in your PATH</pre>
+            </div>
+
+            <h4>Option B: Install All Tools via Conda</h4>
+            <div class="code-block">
+<pre># Install all pipeline tools and create the metamag environment
+python setup_tools.py --all
+
+# This creates the metamag environment with all tools</pre>
+            </div>
+
+            <h4>Option C: Install Minimal Tools First</h4>
+            <div class="code-block">
+<pre># Create environment with just FastQC to start
+python setup_tools.py --tools fastqc
+
+# This creates the metamag environment with minimal tools</pre>
+            </div>
+
+            <h3><span class="step-number">5️⃣</span> Customize Tool Paths (if needed)</h3>
+            <p>If tools weren't detected automatically, edit your configuration:</p>
+            <div class="code-block">
+<pre># Compare your config with the example
+diff config_example.py MetaMAG/config.py
+
+# Edit your configuration
+nano MetaMAG/config.py
+
+# For each missing tool, find its location:
+which [toolname]
+
+# Then update the path in config.py
+# Use config_example.py as a reference for the format</pre>
+            </div>
+
+            <div class="note-box">
+                <h4>Tips for Setting Tool Paths</h4>
+                <ul>
+                    <li>Paths should point to executable files, not directories</li>
+                    <li>Use absolute paths (starting with /)</li>
+                    <li>For conda-installed tools, paths typically include <code>/miniconda3/envs/</code></li>
+                    <li>Reference <code>config_example.py</code> for the expected format</li>
+                </ul>
+            </div>
+
+            <h3><span class="step-number">6️⃣</span> Install Additional Tools</h3>
+            <p>Add more tools as needed:</p>
+            <div class="code-block">
+<pre># Install specific tools
+python setup_tools.py --update --tools fastp bwa samtools
+
+# Install tools for specific pipeline steps
+python setup_tools.py --update --steps trimming assembly
+
+# Install tools for multiple steps
+python setup_tools.py --update --steps qc preprocessing assembly binning</pre>
+            </div>
+
+            <div class="success-box">
+                <strong>Available Installation Options:</strong>
+                <ul>
+                    <li><code>--all</code>: Install all pipeline tools</li>
+                    <li><code>--tools [list]</code>: Install specific tools</li>
+                    <li><code>--steps [list]</code>: Install tools for pipeline steps</li>
+                    <li><code>--update</code>: Add tools to existing environment</li>
+                    <li><code>--force-recreate</code>: Recreate environment from scratch</li>
+                    <li><code>--use-existing</code>: Use system tools without installing</li>
+                </ul>
+            </div>
+
+            <h3><span class="step-number">7️⃣</span> Verify Tool Installation</h3>
+            <p>Check which tools are properly configured:</p>
+            <div class="code-block">
+<pre># Verify all tools
+python setup_tools.py --verify
+
+# Expected output format:
+# Tool                Status     Version/Notes
+# ============================================================
+# fastqc              OK         FastQC v0.11.9
+# fastp               OK         fastp 0.23.2
+# megahit             MISSING    Not found in environment
+# ...</pre>
+            </div>
+
+            <h3><span class="step-number">8️⃣</span> Install Python Package</h3>
+            <p>Install the MetaMAG pipeline package:</p>
+            <div class="code-block">
+<pre># From the repository root directory
+pip install -e .
+
+# This installs MetaMAG in development mode
+# You can now import MetaMAG modules from anywhere</pre>
+            </div>
+
+            <h3><span class="step-number">9️⃣</span> Test Your Installation</h3>
+            <p>Run a quick test to ensure everything works:</p>
+            <div class="code-block">
+<pre># Test import
+python -c "from MetaMAG import qc; print('Import successful!')"
+
+# Run help to see available options
+python main.py --help</pre>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>📋 Quick Start Example</h2>
+            
+            <div class="code-block">
+<pre># 1. Create a sample list
+echo "SRR12345678" > samples.txt
+echo "SRR12345679" >> samples.txt
+
+# 2. Create a project configuration
+cat > project_config.yaml << EOF
+input_dir: "/path/to/raw/reads"
+output_dir: "/path/to/output"
+reference: "/path/to/host/genome.fa"  # Optional for host removal
+EOF
+
+# 3. Run quality control step
+python main.py --project_config project_config.yaml \
+  --samples-file samples.txt \
+  --steps qc \
+  --batch_size 2 \
+  --cpus 8 \
+  --memory "32G" \
+  --time "2:00:00"</pre>
+            </div>
+
+            <h3>Tool Categories</h3>
+            <div class="tool-categories">
+                <div class="tool-category">
+                    <h5>Quality Control</h5>
+                    <p>FastQC, MultiQC</p>
+                </div>
+                <div class="tool-category">
+                    <h5>Preprocessing</h5>
+                    <p>Fastp, BWA, Samtools</p>
+                </div>
+                <div class="tool-category">
+                    <h5>Assembly</h5>
+                    <p>IDBA, MEGAHIT, MetaQUAST</p>
+                </div>
+                <div class="tool-category">
+                    <h5>Binning</h5>
+                    <p>MetaWrap, DAS Tool, MetaBAT2, MaxBin2</p>
+                </div>
+                <div class="tool-category">
+                    <h5>Evaluation</h5>
+                    <p>CheckM2, dRep</p>
+                </div>
+                <div class="tool-category">
+                    <h5>Taxonomy</h5>
+                    <p>GTDB-Tk, Kraken2, Bracken</p>
+                </div>
+                <div class="tool-category">
+                    <h5>Annotation</h5>
+                    <p>EggNOG-mapper, dbCAN, Prodigal</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>🛠 Troubleshooting</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Issue</th>
+                        <th>Solution</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>conda: command not found</strong></td>
+                        <td>Run <code>source ~/.bashrc</code> or reinstall Miniconda</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Environment 'metamag' not found</strong></td>
+                        <td>Run <code>python setup_tools.py --tools fastqc</code> to create the environment</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tool not detected</strong></td>
+                        <td>Check <code>config_example.py</code> for reference, then edit <code>MetaMAG/config.py</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Permission denied errors</strong></td>
+                        <td>Avoid using sudo; install in user space with Conda</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Config file not found</strong></td>
+                        <td>Ensure you're in the repository root directory when running setup</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tools missing after installation</strong></td>
+                        <td>Activate the environment: <code>conda activate metamag</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Configuration Troubleshooting</h3>
+            <div class="code-block">
+<pre># If tools aren't found automatically:
+
+# 1. Find tool location manually
+which megahit
+# or for conda environments:
+find ~/miniconda3 -name "megahit" -type f 2>/dev/null
+
+# 2. Check config_example.py for the format
+grep "megahit" config_example.py
+
+# 3. Update your config
+nano MetaMAG/config.py
+# Add or update the tool path
+
+# 4. Verify the change
+python setup_tools.py --verify</pre>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>🙋 Getting Help</h2>
+            <ul>
+                <li><strong>Configuration Reference:</strong> Check <code>config_example.py</code> for tool path examples</li>
+                <li><strong>Bug Reports:</strong> Submit issues on GitHub</li>
+                <li><strong>Email Support:</strong> mariasatti12@gmail.com</li>
+                <li><strong>Documentation:</strong> See the User Guide for detailed usage instructions</li>
+            </ul>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="index.html" class="nav-btn nav-btn-home">← Back to Home</a>
+            <a href="user-guide.html" class="nav-btn nav-btn-guide">User Guide →</a>
+        </div>
+    </div>
+</body>
+</html>
