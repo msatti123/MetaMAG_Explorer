@@ -454,8 +454,7 @@
             </a>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="index.html#features">Features</a></li>
-                <li><a href="installation.html">Installation</a></li>
+                <li><a href="installation.html">Installation Guide</a></li>
                 <li><a href="user-guide.html" class="active">User Guide</a></li>
                 <li><a href="https://github.com/msatti123/MetaMAG_Explorer">GitHub</a></li>
             </ul>
@@ -839,7 +838,7 @@ python3 -m MetaMAG.main \
             </section>
 
             <!-- Binning Section -->
-            <!-- Binning Section -->
+
 <section id="binning">
     <h2>Step 4: Binning & Refinement</h2>
     
@@ -909,9 +908,9 @@ python3 -m MetaMAG.main \
         </div>
         
         <div class="alert alert-info">
-            <span class="alert-icon">ℹ️</span>
+           
             <div>
-                <h4>DAS Tool Processing Notes</h4>
+                <h4><span class="alert-icon">ℹ️</span> DAS Tool Processing Notes</h4>
                 <ul>
                     <li>Score threshold: 0.5 (can be adjusted with --score_threshold)</li>
                     <li>Automatically handles missing or empty bin directories</li>
@@ -965,9 +964,9 @@ python3 -m MetaMAG.main \
         </ul>
         
         <div class="alert alert-info">
-            <span class="alert-icon">ℹ️</span>
+            
             <div>
-                <h4>CheckM Processing Notes</h4>
+                <h4><span class="alert-icon">ℹ️</span> CheckM Processing Notes</h4>
                 <ul>
                     <li>CheckM lineage_wf is used (not qa or taxonomy_wf)</li>
                     <li>Automatically processes bin_stats_ext.tsv to create cleaned CSV</li>
@@ -1037,9 +1036,9 @@ python3 -m MetaMAG.main \
         </ul>
         
         <div class="alert alert-info">
-            <span class="alert-icon">ℹ️</span>
             <div>
-                <h4>dRep Configuration (Hardcoded Parameters)</h4>
+                <h4>
+            <span class="alert-icon">ℹ️</span> dRep Configuration (Hardcoded Parameters)</h4>
                 <ul>
                     <li><strong>Minimum completeness:</strong> 80%</li>
                     <li><strong>Maximum contamination:</strong> 10%</li>
@@ -1095,9 +1094,9 @@ python3 -m MetaMAG.main \
         </ul>
         
         <div class="alert alert-info">
-            <span class="alert-icon">ℹ️</span>
+            
             <div>
-                <h4>GTDB-Tk Path Configuration</h4>
+                <h4><span class="alert-icon">ℹ️</span> GTDB-Tk Path Configuration</h4>
                 <p><strong>Input Path (Fixed):</strong></p>
                 <code>{project_output}/Bin_Refinement/drep/dRep_output/dereplicated_genomes</code>
                 <p style="margin-top: 10px;"><strong>Output Path (Fixed):</strong></p>
@@ -1130,9 +1129,9 @@ python3 -m MetaMAG.main \
         </div>
         
         <div class="alert alert-warning">
-            <span class="alert-icon">⚠️</span>
+            
             <div>
-                <h4>Memory Requirements</h4>
+                <h4><span class="alert-icon">⚠️</span> Memory Requirements</h4>
                 <p>GTDB-Tk requires substantial memory (~200GB) due to the reference database size. 
                 Ensure adequate resources are allocated. The tool may fail with insufficient memory 
                 without clear error messages.</p>
@@ -1141,16 +1140,15 @@ python3 -m MetaMAG.main \
     </div>
 </section>
 
-<!-- Add after Taxonomy Section (Step 6) -->
 
 <!-- Rumen Reference MAGs Section -->
 <section id="rumen-mags">
     <h2>Step 7: Rumen Reference MAGs Processing (Optional)</h2>
     
     <div class="alert alert-info">
-        <span class="alert-icon">ℹ️</span>
+        
         <div>
-            <h4>For Rumen Microbiome Projects</h4>
+            <h4><span class="alert-icon">ℹ️</span> For Rumen Microbiome Projects</h4>
             <p>These steps are specifically designed for rumen microbiome studies. They integrate 
             high-quality reference genomes from major rumen microbiome databases (RGMGC, MGnify, RUG).</p>
         </div>
@@ -1422,9 +1420,9 @@ python3 -m MetaMAG.main \
         </div>
         
         <div class="alert alert-warning">
-            <span class="alert-icon">⚠️</span>
+            
             <div>
-                <h4>Merge Mode</h4>
+                <h4><span class="alert-icon">⚠️</span> Merge Mode</h4>
                 <p>--merge_mode: Updates existing Kraken database (recommended)</p>
                 <p>--no_merge: Creates fresh database (use carefully)</p>
             </div>
@@ -1505,9 +1503,9 @@ python3 -m MetaMAG.main \
         </div>
         
         <div class="alert alert-info">
-            <span class="alert-icon">ℹ️</span>
+            
             <div>
-                <h4>Required Scripts</h4>
+                <h4><span class="alert-icon">ℹ️</span> Required Scripts</h4>
                 <p>The pipeline requires these scripts in the main directory:</p>
                 <ul>
                     <li>gtdb_to_taxdump_latest_resolve.py - Advanced taxonomy resolver</li>
@@ -1538,9 +1536,9 @@ python3 -m MetaMAG.main \
     <h2>Step 9: Functional Annotation</h2>
     
     <div class="alert alert-info">
-        <span class="alert-icon">ℹ️</span>
+        
         <div>
-            <h4>Comprehensive Functional Analysis Pipeline</h4>
+            <h4> <span class="alert-icon">ℹ️</span> Comprehensive Functional Analysis Pipeline</h4>
             <p>The functional annotation pipeline includes three main components: EggNOG annotation 
             for orthology groups, dbCAN for CAZyme identification, and integrated functional 
             analysis with visualization.</p>
@@ -1642,9 +1640,9 @@ python3 -m MetaMAG.main \
         </div>
         
         <div class="alert alert-info">
-            <span class="alert-icon">ℹ️</span>
+            
             <div>
-                <h4>Automatic Visualizations</h4>
+                <h4><span class="alert-icon">ℹ️</span> Automatic Visualizations</h4>
                 <p>dbCAN automatically generates multiple plots including heatmaps, 
                 category distributions, substrate groupings, and clustering dendrograms. 
                 These require matplotlib, seaborn, and pandas to be installed.</p>
@@ -1720,9 +1718,9 @@ python3 -m MetaMAG.main \
         </div>
         
         <div class="alert alert-warning">
-            <span class="alert-icon">⚠️</span>
+            
             <div>
-                <h4>KEGG Database File</h4>
+                <h4><span class="alert-icon">⚠️</span> KEGG Database File</h4>
                 <p>The ko.txt file enables KEGG pathway hierarchy mapping. Without it, 
                 the analysis will skip pathway-level visualizations but still process 
                 COG and KO annotations.</p>
@@ -1802,9 +1800,9 @@ python3 -m MetaMAG.main \
     </div>
     
     <div class="alert alert-info">
-        <span class="alert-icon">ℹ️</span>
+        
         <div>
-            <h4>Processing Notes</h4>
+            <h4><span class="alert-icon">ℹ️</span> Processing Notes</h4>
             <ul>
                 <li>Runs all visualizations automatically in two phases</li>
                 <li>Phase 1: Analyzes all MAGs in the project</li>
@@ -1841,9 +1839,9 @@ python3 -m MetaMAG.main \
     <h2>Step 10: Abundance Estimation</h2>
     
     <div class="alert alert-info">
-        <span class="alert-icon">ℹ️</span>
+        
         <div>
-            <h4>Comprehensive Abundance Analysis Pipeline</h4>
+            <h4><span class="alert-icon">ℹ️</span> Comprehensive Abundance Analysis Pipeline</h4>
             <p>This step performs taxonomic classification and abundance estimation using your 
             custom Kraken2 database (with novel MAGs) and Bracken for accurate abundance quantification.</p>
         </div>
@@ -1991,9 +1989,9 @@ Sample_005,Treatment_B</pre>
         </div>
         
         <div class="alert alert-warning">
-            <span class="alert-icon">⚠️</span>
+            
             <div>
-                <h4>Important Notes</h4>
+                <h4><span class="alert-icon">⚠️</span> Important Notes</h4>
                 <ul>
                     <li><strong>Kraken Database Path:</strong> Must point to the database built in Step 8.4</li>
                     <li><strong>Bracken Requirements:</strong> Database must have kmer distribution files 
@@ -2046,9 +2044,9 @@ Sample_005,Treatment_B</pre>
     <h2>Step 11: Phylogenetic Tree Generation and Visualization</h2>
     
     <div class="alert alert-info">
-        <span class="alert-icon">ℹ️</span>
+        
         <div>
-            <h4>Optional Advanced Analysis</h4>
+            <h4><span class="alert-icon">ℹ️</span> Optional Advanced Analysis</h4>
             <p>Generate custom phylogenetic trees and create publication-quality visualizations 
             with integrated taxonomic and functional annotations.</p>
         </div>
@@ -2096,9 +2094,9 @@ Sample_005,Treatment_B</pre>
         </div>
         
         <div class="alert alert-warning">
-            <span class="alert-icon">⚠️</span>
+            
             <div>
-                <h4>Outgroup Selection</h4>
+                <h4><span class="alert-icon">⚠️</span> Outgroup Selection</h4>
                 <p>Choose an appropriate outgroup taxon based on your data:</p>
                 <ul>
                     <li><code>p__Firmicutes</code> - Common for Bacteroidetes-rich samples</li>
@@ -2220,9 +2218,9 @@ python3 -m MetaMAG.main \
         </div>
         
         <div class="alert alert-info">
-            <span class="alert-icon">ℹ️</span>
+            
             <div>
-                <h4>Optional Parameters</h4>
+                <h4><span class="alert-icon">ℹ️</span> Optional Parameters</h4>
                 <ul>
                     <li><code>--novel_mags_file</code>: Text file with novel MAG IDs (one per line)</li>
                     <li><code>--functional_annotations</code>: Path to annotation directory (auto-detected)</li>
@@ -2307,9 +2305,9 @@ python3 -m MetaMAG.main \
     <h2>Complete Pipeline Script</h2>
     
     <div class="alert alert-info">
-        <span class="alert-icon">ℹ️</span>
+        
         <div>
-            <h4>Comprehensive Pipeline Script</h4>
+            <h4><span class="alert-icon">ℹ️</span> Comprehensive Pipeline Script</h4>
             <p>This script includes all pipeline steps with proper parameters. Uncomment the sections you need and adjust paths/parameters for your project.</p>
         </div>
     </div>
@@ -2794,9 +2792,9 @@ echo "=========================================="</pre>
     </div>
     
     <div class="alert alert-success">
-        <span class="alert-icon">✅</span>
+        
         <div>
-            <h4>Script Usage Tips</h4>
+            <h4><span class="alert-icon">✅</span> Script Usage Tips</h4>
             <ul>
                 <li>Comment out steps you don't need (use # at the beginning of lines)</li>
                 <li>Uncomment optional sections like rumen processing if needed</li>
@@ -2832,9 +2830,9 @@ echo "=========================================="</pre>
     <h2>Troubleshooting</h2>
     
     <div class="alert alert-info">
-        <span class="alert-icon">💡</span>
+        
         <div>
-            <h4>Common Troubleshooting Steps</h4>
+            <h4><span class="alert-icon">💡</span> Common Troubleshooting Steps</h4>
             <ul>
                 <li>Check log files in <code>$LOG_DIR</code></li>
                 <li>Verify input data quality</li>
@@ -2898,4 +2896,3 @@ echo "=========================================="</pre>
 </body>
 
 </html>
-
