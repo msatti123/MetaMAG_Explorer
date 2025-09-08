@@ -23,7 +23,7 @@
 - **Modular Design**: Run individual steps or the complete pipeline based on your needs
 - **HPC Optimized**: Built for high-performance computing environments with SLURM integration
 
-## 📖 Documentation
+##   Documentation
 
 **For detailed instructions, please visit our comprehensive documentation:**
 
@@ -156,7 +156,7 @@ output_dir/
 └── Abundance/              # MAG abundance profiles
 ```
 
-## 🛠️ Available Pipeline Steps
+## Available Pipeline Steps
 
 Run individual steps or combinations:
 
