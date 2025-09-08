@@ -15,6 +15,11 @@
             --light-text: #ffffff;
             --border-radius: 6px;
             --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			--gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			--primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --dark: #1f2937;
+            --white: #ffffff;
         }
 		img {
 			max-width: 100%;
@@ -40,13 +45,94 @@
             margin: 0 auto;
             padding: 0 20px;
         }
-        
-        header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: var(--light-text);
-            padding: 40px 0;
+         /* Navigation */
+        nav {
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links .active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 2px;
+        }
+
+        .nav-cta {
+            background: var(--primary);
+            color: var(--white);
+            padding: 0.5rem 1.25rem;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .nav-cta:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+		
+        /* Header */
+        .header {
+            background: var(--gradient);
+            color: var(--white);
+            padding: 100px 0 40px;
             text-align: center;
-            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
         }
         
         h1 {
@@ -360,11 +446,29 @@
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>MetaMAG Explorer</h1>
-            <p>A Comprehensive Metagenome-Assembled Genome Analysis Pipeline</p>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                MetaMAG Explorer
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="installation.html">Installation Guide</a></li>
+                <li><a href="user-guide.html" class="active">User Guide</a></li>
+                <li><a href="https://github.com/msatti123/MetaMAG_Explorer">GitHub</a></li>
+            </ul>
         </div>
+    </nav>
+	    <!-- Header -->
+    <header class="header">
+        <h1>MetaMAG Explorer</h1>
+        <p>A Comprehensive Metagenome-Assembled Genome Analysis Pipeline</p>
     </header>
     
     <div class="container">
@@ -585,24 +689,24 @@
 +-- Trimming/                   # Trimmed read files
 +-- Host_Removal/               # Host-filtered read files
 +-- Assembly/
-¦   +-- IDBA/                   # Single-sample assemblies
-¦   +-- MEGAHIT/                # Co-assemblies
+Â¦   +-- IDBA/                   # Single-sample assemblies
+Â¦   +-- MEGAHIT/                # Co-assemblies
 +-- MetaQUAST/                  # Assembly quality evaluation
 +-- Binning/                    # Raw binning results
 +-- Bin_Refinement/             # Refined bins
-¦   +-- drep/                   # Dereplicated MAGs
+Â¦   +-- drep/                   # Dereplicated MAGs
 +-- Evaluation/                 # CheckM2 quality assessment
 +-- Novel_Mags/
-¦   +-- gtdbtk/                 # GTDB-Tk classification results
-¦   +-- UniqueMags/             # Candidate novel MAGs
-¦   +-- filtered_NMAGs/         # MAGs after repository dereplication
-¦   +-- true_novel_MAGs/        # Final set of novel MAGs
+Â¦   +-- gtdbtk/                 # GTDB-Tk classification results
+Â¦   +-- UniqueMags/             # Candidate novel MAGs
+Â¦   +-- filtered_NMAGs/         # MAGs after repository dereplication
+Â¦   +-- true_novel_MAGs/        # Final set of novel MAGs
 +-- MAGs_Repository/            # Central repository of all MAGs
 +-- Kraken_Database/            # Kraken2 database with novel MAGs
 +-- Functional_Annotation/
-¦   +-- eggNOG/                 # eggNOG annotation results
-¦   +-- dbCAN/                  # CAZyme annotations
-¦   +-- KEGG/                   # KEGG functional analysis
+Â¦   +-- eggNOG/                 # eggNOG annotation results
+Â¦   +-- dbCAN/                  # CAZyme annotations
+Â¦   +-- KEGG/                   # KEGG functional analysis
 +-- Phylogeny/                  # Phylogenetic trees
 +-- Abundance/                  # MAG abundance estimates</code></pre>
                 </section>
@@ -641,8 +745,8 @@
                             <h4>Q: What types of metagenomic data can be processed with this pipeline?</h4>
                             <p>A: MetaMAG Explorer can process shotgun metagenomic data from any environment, with specialized features for host-associated microbiomes, particularly the rumen microbiome.</p>
                             
-                            <h4>Q: What is the minimum sequencing depth required?</h4>
-                            <p>A: For optimal MAG recovery, we recommend at least 5-10 Gbp of sequencing data per sample. However, the co-assembly approach can help recover genomes from samples with lower sequencing depth.</p>
+                            <h4>Q: Can I use long-read sequencing data (PacBio/Nanopore)?</h4>
+                            <p>A: The current pipeline is designed for short-read Illumina data. Long reads would require different assemblers (like metaFlye or Canu) and modified quality control steps.</p>
                             
                             <h4>Q: How does the pipeline define "novel" MAGs?</h4>
                             <p>A: MAGs are considered potentially novel if they lack a species-level classification in GTDB-Tk results (indicated by "s__" in the taxonomy string). They are confirmed as novel if they pass dereplication against existing MAG repositories.</p>
@@ -670,18 +774,16 @@
                                 </ul>
                             </p>
                             
-                            <h4>Q: How long does the complete pipeline take to run?</h4>
-                            <p>A: Runtime depends on dataset size and available computational resources. For a typical dataset (20 samples), expect:
-                                <ul>
-                                    <li>Preprocessing: 1-2 hours per sample</li>
-                                    <li>Assembly: 4-24 hours per sample or co-assembly</li>
-                                    <li>Binning and refinement: 2-6 hours</li>
-                                    <li>GTDB-Tk classification: 1-3 hours</li>
-                                    <li>Novel MAG processing: 2-4 hours</li>
-                                    <li>Functional annotation: 4-8 hours</li>
-                                </ul>
-                                Total runtime is typically 2-7 days for a complete analysis.
-                            </p>
+                            <h4>Q: How can I speed up the pipeline?</h4>
+                            <p>A: Running steps in parallel, using more CPU cores, and allocating sufficient memory will reduce runtime.</p>
+							<h4>Q: Can I adjust resources for individual steps?</h4>
+                            <p>A: Yes, resource requirements (CPU, memory, time) can be customized per step in the configuration file or SLURM job submission script.</p>
+							<h4>Q: Can failed jobs be restarted without repeating everything?</h4>
+                            <p>A:Yes, the pipeline supports checkpointing and modular execution, so failed steps can be rerun independently.</p>
+							<h4>Q: Does running on multiple nodes improve performance?</h4>
+                            <p>A:Yes, the pipeline is designed for HPC environments and can distribute tasks across multiple nodes for efficiency.</p>
+                               
+                            
                         </div>
                     </div>
                 </section>
@@ -711,29 +813,113 @@
                     
                     <p>For additional troubleshooting and support, please open an issue in the GitHub repository or contact the developers directly.</p>
                 </section>
+				
+				
+				
                 
                 <section id="references" class="card">
-                    <h2>References</h2>
+                   
                     
-                    <h3>Pipeline and Methodology</h3>
-                    <ul>
-                        <li>Stewart RD, Auffret MD, Warr A, et al. (2018). <em>Assembly of 913 microbial genomes from metagenomic sequencing of the cow rumen.</em> Nature Communications, 9(1), 870.</li>
-                        <li>Parks DH, Chuvochina M, Rinke C, et al. (2022). <em>GTDB: an ongoing census of bacterial and archaeal diversity through a phylogenetically consistent, rank normalized and complete genome-based taxonomy.</em> Nucleic Acids Research, 50(D1), D785-D794.</li>
-                    </ul>
-                    
-                    <h3>Tools Used</h3>
-                    <ul>
-                        <li>Peng Y, Leung HC, Yiu SM, Chin FY. (2012). <em>IDBA-UD: a de novo assembler for single-cell and metagenomic sequencing data with highly uneven depth.</em> Bioinformatics, 28(11), 1420-1428.</li>
-                        <li>Li D, Liu CM, Luo R, Sadakane K, Lam TW. (2015). <em>MEGAHIT: an ultra-fast single-node solution for large and complex metagenomics assembly via succinct de Bruijn graph.</em> Bioinformatics, 31(10), 1674-1676.</li>
-                        <li>Kang DD, Li F, Kirton E, et al. (2019). <em>MetaBAT 2: an adaptive binning algorithm for robust and efficient genome reconstruction from metagenome assemblies.</em> PeerJ, 7, e7359.</li>
-                        <li>Alneberg J, Bjarnason BS, de Bruijn I, et al. (2014). <em>Binning metagenomic contigs by coverage and composition.</em> Nature Methods, 11(11), 1144-1146.</li>
-                        <li>Sieber CMK, Probst AJ, Sharrar A, et al. (2018). <em>Recovery of genomes from metagenomes via a dereplication, aggregation and scoring strategy.</em> Nature Microbiology, 3(7), 836-843.</li>
-                        <li>Olm MR, Brown CT, Brooks B, Banfield JF. (2017). <em>dRep: a tool for fast and accurate genomic comparisons that enables improved genome recovery from metagenomes through de-replication.</em> The ISME Journal, 11(12), 2864-2868.</li>
-                        <li>Chaumeil PA, Mussig AJ, Hugenholtz P, Parks DH. (2020). <em>GTDB-Tk: a toolkit to classify genomes with the Genome Taxonomy Database.</em> Bioinformatics, 36(6), 1925-1927.</li>
-                        <li>Wood DE, Lu J, Langmead B. (2019). <em>Improved metagenomic analysis with Kraken 2.</em> Genome Biology, 20(1), 257.</li>
-                        <li>Huerta-Cepas J, Forslund K, Coelho LP, et al. (2017). <em>Fast genome-wide functional annotation through orthology assignment by eggNOG-mapper.</em> Molecular Biology and Evolution, 34(8), 2115-2122.</li>
-                        <li>Zhang H, Yohe T, Huang L, et al. (2018). <em>dbCAN2: a meta server for automated carbohydrate-active enzyme annotation.</em> Nucleic Acids Research, 46(W1), W95-W101.</li>
-                    </ul>
+                     <h2>Complete List of Tools and Software Used</h2>
+    
+    <h3>Quality Control & Preprocessing</h3>
+    <ul>
+        <li><strong>FastQC:</strong> Andrews, S. (2010). <em>FastQC: A quality control tool for high throughput sequence data.</em> Babraham Bioinformatics. Available at: <a href="https://www.bioinformatics.babraham.ac.uk/projects/fastqc/">https://www.bioinformatics.babraham.ac.uk/projects/fastqc/</a></li>
+        
+        <li><strong>fastp:</strong> Chen, S., Zhou, Y., Chen, Y., & Gu, J. (2018). fastp: an ultra-fast all-in-one FASTQ preprocessor. <em>Bioinformatics</em>, 34(17), i884-i890. <a href="https://doi.org/10.1093/bioinformatics/bty560">https://doi.org/10.1093/bioinformatics/bty560</a></li>
+        
+        <li><strong>BWA-MEM:</strong> Li, H. (2013). Aligning sequence reads, clone sequences and assembly contigs with BWA-MEM. <em>arXiv preprint</em>, arXiv:1303.3997.</li>
+        
+        <li><strong>SAMtools:</strong> Li, H., Handsaker, B., Wysoker, A., et al. (2009). The Sequence Alignment/Map format and SAMtools. <em>Bioinformatics</em>, 25(16), 2078-2079. <a href="https://doi.org/10.1093/bioinformatics/btp352">https://doi.org/10.1093/bioinformatics/btp352</a></li>
+    </ul>
+    
+    <h3>Assembly Tools</h3>
+    <ul>
+        <li><strong>IDBA-UD:</strong> Peng, Y., Leung, H. C. M., Yiu, S. M., & Chin, F. Y. L. (2012). IDBA-UD: a de novo assembler for single-cell and metagenomic sequencing data with highly uneven depth. <em>Bioinformatics</em>, 28(11), 1420-1428. <a href="https://doi.org/10.1093/bioinformatics/bts174">https://doi.org/10.1093/bioinformatics/bts174</a></li>
+        
+        <li><strong>MEGAHIT:</strong> Li, D., Liu, C. M., Luo, R., Sadakane, K., & Lam, T. W. (2015). MEGAHIT: an ultra-fast single-node solution for large and complex metagenomics assembly via succinct de Bruijn graph. <em>Bioinformatics</em>, 31(10), 1674-1676. <a href="https://doi.org/10.1093/bioinformatics/btv033">https://doi.org/10.1093/bioinformatics/btv033</a></li>
+        
+        <li><strong>MetaQUAST:</strong> Mikheenko, A., Saveliev, V., & Gurevich, A. (2016). MetaQUAST: evaluation of metagenome assemblies. <em>Bioinformatics</em>, 32(7), 1088-1090. <a href="https://doi.org/10.1093/bioinformatics/btv697">https://doi.org/10.1093/bioinformatics/btv697</a></li>
+    </ul>
+    
+    <h3>Binning & Refinement</h3>
+    <ul>
+        <li><strong>MetaWRAP:</strong> Uritskiy, G. V., DiRuggiero, J., & Taylor, J. (2018). MetaWRAP-a flexible pipeline for genome-resolved metagenomic data analysis. <em>Microbiome</em>, 6, 158. <a href="https://doi.org/10.1186/s40168-018-0541-1">https://doi.org/10.1186/s40168-018-0541-1</a></li>
+        
+        <li><strong>MetaBAT2:</strong> Kang, D. D., Li, F., Kirton, E., et al. (2019). MetaBAT 2: an adaptive binning algorithm for robust and efficient genome reconstruction from metagenome assemblies. <em>PeerJ</em>, 7, e7359. <a href="https://doi.org/10.7717/peerj.7359">https://doi.org/10.7717/peerj.7359</a></li>
+        
+        <li><strong>MaxBin2:</strong> Wu, Y. W., Simmons, B. A., & Singer, S. W. (2016). MaxBin 2.0: an automated binning algorithm to recover genomes from multiple metagenomic datasets. <em>Bioinformatics</em>, 32(4), 605-607. <a href="https://doi.org/10.1093/bioinformatics/btv638">https://doi.org/10.1093/bioinformatics/btv638</a></li>
+        
+        <li><strong>CONCOCT:</strong> Alneberg, J., Bjarnason, B. S., de Bruijn, I., et al. (2014). Binning metagenomic contigs by coverage and composition. <em>Nature Methods</em>, 11, 1144-1146. <a href="https://doi.org/10.1038/nmeth.3103">https://doi.org/10.1038/nmeth.3103</a></li>
+        
+        <li><strong>DAS Tool:</strong> Sieber, C. M. K., Probst, A. J., Sharrar, A., et al. (2018). Recovery of genomes from metagenomes via a dereplication, aggregation and scoring strategy. <em>Nature Microbiology</em>, 3, 836-843. <a href="https://doi.org/10.1038/s41564-018-0171-1">https://doi.org/10.1038/s41564-018-0171-1</a></li>
+    </ul>
+    
+    <h3>Quality Assessment & Dereplication</h3>
+    <ul>
+        <li><strong>dRep:</strong> Olm, M. R., Brown, C. T., Brooks, B., & Banfield, J. F. (2017). dRep: a tool for fast and accurate genomic comparisons that enables improved genome recovery from metagenomes through de-replication. <em>ISME Journal</em>, 11, 2864-2868. <a href="https://doi.org/10.1038/ismej.2017.126">https://doi.org/10.1038/ismej.2017.126</a></li>
+        
+        <li><strong>CheckM2:</strong> Chklovski, A., Parks, D. H., Woodcroft, B. J., Tyson, G. W., & Hugenholtz, P. (2023). CheckM2: assessing quality of metagenome-assembled genomes using machine learning. <em>Nature Biotechnology</em>. <a href="https://doi.org/10.1038/s41587-023-01782-8">https://doi.org/10.1038/s41587-023-01782-8</a></li>
+        
+        <li><strong>fastANI:</strong> Jain, C., Rodriguez-R, L. M., Phillippy, A. M., Konstantinidis, K. T., & Aluru, S. (2018). High throughput ANI analysis of 90K prokaryotic genomes reveals clear species boundaries. <em>Nature Communications</em>, 9, 5114. <a href="https://doi.org/10.1038/s41467-018-07641-9">https://doi.org/10.1038/s41467-018-07641-9</a></li>
+    </ul>
+    
+    <h3>Taxonomic Classification</h3>
+    <ul>
+        <li><strong>GTDB-Tk:</strong> Chaumeil, P. A., Parks, D. H., Rinke, C., & Hugenholtz, P. (2019). GTDB-Tk: A toolkit to classify genomes with the Genome Taxonomy Database. <em>Bioinformatics</em>, 36(6), 1925-1927. <a href="https://doi.org/10.1093/bioinformatics/btz848">https://doi.org/10.1093/bioinformatics/btz848</a></li>
+        
+        <li><strong>Kraken2:</strong> Wood, D. E., Lu, J., & Langmead, B. (2019). Improved metagenomic analysis with Kraken 2. <em>Genome Biology</em>, 20, 257. <a href="https://doi.org/10.1186/s13059-019-1891-0">https://doi.org/10.1186/s13059-019-1891-0</a></li>
+        
+        <li><strong>Bracken:</strong> Lu, J., Breitwieser, F. P., Thielen, P., & Salzberg, S. L. (2017). Bracken: estimating species abundance in metagenomic data. <em>PeerJ Computer Science</em>, 3, e104. <a href="https://doi.org/10.7717/peerj-cs.104">https://doi.org/10.7717/peerj-cs.104</a></li>
+    </ul>
+    
+    <h3>Functional Annotation</h3>
+    <ul>
+        <li><strong>Prodigal:</strong> Hyatt, D., Chen, G. L., LoCascio, P. F., Land, M. L., Larimer, F. W., & Hauser, L. J. (2010). Prodigal: prokaryotic gene recognition and translation initiation site identification. <em>BMC Bioinformatics</em>, 11, 119. <a href="https://doi.org/10.1186/1471-2105-11-119">https://doi.org/10.1186/1471-2105-11-119</a></li>
+        
+        <li><strong>eggNOG-mapper:</strong> Cantalapiedra, C. P., Hernandez-Plaza, A., Letunic, I., Bork, P., & Huerta-Cepas, J. (2021). eggNOG-mapper v2: Functional annotation, orthology assignments, and domain prediction at the metagenomic scale. <em>Molecular Biology and Evolution</em>, 38(12), 5825-5829. <a href="https://doi.org/10.1093/molbev/msab293">https://doi.org/10.1093/molbev/msab293</a></li>
+        
+        <li><strong>dbCAN3:</strong> Zheng, J., Ge, Q., Yan, Y., Zhang, X., Huang, L., & Yin, Y. (2023). dbCAN3: automated carbohydrate-active enzyme and substrate annotation. <em>Nucleic Acids Research</em>, 51(W1), W115-W121. <a href="https://doi.org/10.1093/nar/gkad328">https://doi.org/10.1093/nar/gkad328</a></li>
+        
+        <li><strong>HMMER:</strong> Used with dbCAN for HMM-based searches (integrated within dbCAN3)</li>
+        
+        <li><strong>DIAMOND:</strong> Used with eggNOG-mapper and dbCAN for fast sequence alignment</li>
+    </ul>
+    
+    <h3>Visualization & Analysis</h3>
+    <ul>
+        <li><strong>matplotlib:</strong> Hunter, J. D. (2007). Matplotlib: A 2D graphics environment. <em>Computing in Science & Engineering</em>, 9(3), 90-95. <a href="https://doi.org/10.1109/MCSE.2007.55">https://doi.org/10.1109/MCSE.2007.55</a></li>
+        
+        <li><strong>seaborn:</strong> Waskom, M. L. (2021). seaborn: statistical data visualization. <em>Journal of Open Source Software</em>, 6(60), 3021. <a href="https://doi.org/10.21105/joss.03021">https://doi.org/10.21105/joss.03021</a></li>
+        
+        <li><strong>plotly:</strong> Plotly Technologies Inc. (2015). <em>Collaborative data science</em>. Montreal, QC. Available at: <a href="https://plot.ly">https://plot.ly</a></li>
+        
+        <li><strong>NetworkX:</strong> Hagberg, A. A., Schult, D. A., & Swart, P. J. (2008). Exploring network structure, dynamics, and function using NetworkX. In <em>Proceedings of the 7th Python in Science Conference (SciPy 2008)</em>, 11-15.</li>
+        
+        <li><strong>ape (R):</strong> Paradis, E., Claude, J., & Strimmer, K. (2004). APE: Analyses of Phylogenetics and Evolution in R language. <em>Bioinformatics</em>, 20(2), 289-290. <a href="https://doi.org/10.1093/bioinformatics/btg412">https://doi.org/10.1093/bioinformatics/btg412</a></li>
+        
+        <li><strong>RColorBrewer (R):</strong> Neuwirth, E. (2022). RColorBrewer: ColorBrewer Palettes. R package version 1.1-3. Available at: <a href="https://cran.r-project.org/package=RColorBrewer">https://cran.r-project.org/package=RColorBrewer</a></li>
+        
+        <li><strong>ggtree (R):</strong> Yu, G., Smith, D. K., Zhu, H., Guan, Y., & Lam, T. T.-Y. (2017). ggtree: an R package for visualization and annotation of phylogenetic trees with their covariates and other associated data. <em>Methods in Ecology and Evolution</em>, 8(1), 28-36. <a href="https://doi.org/10.1111/2041-210X.12628">https://doi.org/10.1111/2041-210X.12628</a></li>
+        
+        <li><strong>ggplot2 (R):</strong> Wickham H. (2016). <em>ggplot2: Elegant Graphics for Data Analysis</em>. Springer-Verlag New York. ISBN 978-3-319-24277-4, <a href="https://ggplot2.tidyverse.org">https://ggplot2.tidyverse.org</a></li>
+    </ul>
+    
+    <h3>Data Retrieval</h3>
+    <ul>
+        <li><strong>SRA Toolkit:</strong> Leinonen, R., Sugawara, H., Shumway, M., & International Nucleotide Sequence Database Collaboration. (2011). The Sequence Read Archive. <em>Nucleic Acids Research</em>, 39(Database issue), D19-D21. <a href="https://doi.org/10.1093/nar/gkq1019">https://doi.org/10.1093/nar/gkq1019</a></li>
+    </ul>
+    
+    <h3>Other Mentioned Pipelines (for comparison)</h3>
+    <ul>
+        <li><strong>SqueezeMeta:</strong> Tamames, J. & Puente-Sanchez, F. (2019). SqueezeMeta, a highly portable, fully automatic metagenomic analysis pipeline from reads to bins. <em>Frontiers in Microbiology</em>, 9, 3349. <a href="https://doi.org/10.3389/fmicb.2018.03349">https://doi.org/10.3389/fmicb.2018.03349</a></li>
+        
+        <li><strong>ATLAS:</strong> Kieser, S., Brown, J., Zdobnov, E. M., Trajkovski, M., & McCue, L. A. (2020). ATLAS: a Snakemake workflow for assembly, annotation, and genomic binning of metagenome sequence data. <em>BMC Bioinformatics</em>, 21, 257. <a href="https://doi.org/10.1186/s12859-020-03585-4">https://doi.org/10.1186/s12859-020-03585-4</a></li>
+        
+        <li><strong>METABOLIC:</strong> Zhou, Z., Tran, P. Q., Breister, A. M., et al. (2022). METABOLIC: high-throughput profiling of microbial genomes for functional traits, metabolism, biogeochemistry, and community-scale functional networks. <em>Microbiome</em>, 10, 33. <a href="https://doi.org/10.1186/s40168-021-01213-8">https://doi.org/10.1186/s40168-021-01213-8</a></li>
+        
+        <li><strong>EasyMetagenome:</strong> Bai, D., et al. (2025). EasyMetagenome: A user-friendly and flexible pipeline for shotgun metagenomic analysis in microbiome research. <em>iMeta</em>, 4(1), e70001. <a href="https://doi.org/10.1002/imt2.70001">https://doi.org/10.1002/imt2.70001</a></li>
+    </ul>
                 </section>
             </div>
         </div>
