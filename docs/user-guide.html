@@ -590,6 +590,82 @@ python3 -m MetaMAG.main \
                 </div>
             </section>
 
+<!-- INSERT THIS SECTION AFTER THE "SLURM Setup Example" SECTION AND BEFORE "File Naming Requirements" -->
+
+<section id="batch-size-explanation">
+    <h2>Understanding Batch Size Parameter</h2>
+    
+    <div class="alert alert-info">
+        <div>
+            <h4><span class="alert-icon">ℹ️</span> Critical: How Batch Size Works</h4>
+            <p><strong>The <code>--batch_size</code> parameter determines how many samples are processed together in a single job.</strong></p>
+            <ul>
+                <li>If you have 20 samples and set <code>--batch_size 20</code> → 1 job processes all 20 samples</li>
+                <li>If you have 20 samples and set <code>--batch_size 10</code> → 2 parallel jobs, each processing 10 samples</li>
+                <li>If you have 20 samples and set <code>--batch_size 1</code> → 20 parallel jobs, each processing 1 sample</li>
+            </ul>
+        </div>
+    </div>
+    
+    <h3>Steps That Must Run as Single Batch</h3>
+    <p>The following steps process all data together and should always use a batch_size equal to your total sample count:</p>
+    
+    <div class="requirements-box">
+        <h5> Single Batch Steps (set batch_size = total samples)</h5>
+        <ul>
+            <li><strong>multiqc</strong> - Combines all QC reports into one</li>
+            <li><strong>co_assembly</strong> - Combines all samples for assembly</li>
+            <li><strong>evaluation</strong> - Evaluates all MAGs together with CheckM</li>
+            <li><strong>dRep</strong> - Dereplicates all MAGs as a set</li>
+            <li><strong>gtdbtk</strong> - Classifies all MAGs in one run</li>
+            <li><strong>all Novel MAG steps</strong> - Process novel MAGs as a complete set</li>
+            <li><strong>all Functional Annotation steps</strong> - Annotate all MAGs together</li>
+            <li><strong>abundance_estimation</strong> - Processes all samples but in single workflow</li>
+            <li><strong>all Phylogenetic Tree steps</strong> - Build tree from all MAGs</li>
+            <li><strong>all Visualization steps</strong> - Generate plots from complete data</li>
+        </ul>
+    </div>
+    
+    <h3>Steps That Can Be Parallelized</h3>
+    <p>These steps process individual samples and benefit from smaller batch sizes for parallel execution:</p>
+    
+    <div class="requirements-box">
+        <h5> Parallelizable Steps (adjust batch_size for parallelization)</h5>
+        <ul>
+            <li><strong>qc</strong> - Each sample's QC can run independently</li>
+            <li><strong>trimming</strong> - Each sample trimmed separately</li>
+            <li><strong>host_removal</strong> - Each sample processed independently</li>
+            <li><strong>single_assembly</strong> - Each sample assembled separately (use batch_size 1-2 due to high memory)</li>
+            <li><strong>single_binning</strong> - Each sample's assembly binned separately</li>
+            <li><strong>single_bin_refinement</strong> - Each sample's bins refined separately</li>
+            <li><strong>kraken_abundance</strong> - Each sample classified independently (but NOT abundance_estimation)</li>
+        </ul>
+    </div>
+    
+    <h3>Recommended Batch Size Strategy</h3>
+    
+    <div class="alert alert-success">
+        <div>
+            <h4><span class="alert-icon">✅</span> General Guidelines</h4>
+            <p>For a project with <strong>N samples</strong>:</p>
+            <ul>
+                <li><strong>Light steps (QC, trimming):</strong> batch_size = N/4 to N/2 (run 2-4 parallel jobs)</li>
+                <li><strong>Memory-intensive steps (assembly, binning):</strong> batch_size = 1 to 2 (maximize parallel jobs)</li>
+                <li><strong>Single-batch steps:</strong> batch_size = N or higher (run as one job)</li>
+                <li><strong>Cluster limits:</strong> Consider your cluster's max job submission limit</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="alert alert-warning">
+        <div>
+            <h4><span class="alert-icon">⚠️</span> Memory Consideration</h4>
+            <p>Remember: Lower batch_size means more parallel jobs but also more total memory usage across all jobs. 
+            For memory-intensive steps like assembly, use batch_size 1-2 even if it means many parallel jobs.</p>
+        </div>
+    </div>
+</section>
+
             <!-- File Requirements Section -->
             <section id="file-requirements">
                 <h2>File Naming Requirements</h2>
