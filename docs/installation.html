@@ -635,7 +635,62 @@ python -c "from MetaMAG import qc; print('Import successful!')"
 python main.py --help</pre>
             </div>
         </div>
-
+        <div class="content-section">
+    <h2>⏱️ Installation Time Estimates</h2>
+    
+    <h3>Total Installation Time</h3>
+    <ul>
+        <li><strong>Minimal Installation (FastQC only):</strong> 15-20 minutes</li>
+        <li><strong>Standard Installation (core tools):</strong> 30-45 minutes</li>
+        <li><strong>Full Installation (all tools):</strong> 60-90 minutes</li>
+        <li><strong>Database Downloads (optional):</strong> 2-4 hours (depending on connection speed)</li>
+    </ul>
+    
+    <h3>Time Breakdown by Step</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Step</th>
+                <th>Estimated Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Install Conda (if needed)</td>
+                <td>5-10 minutes</td>
+            </tr>
+            <tr>
+                <td>Clone repository</td>
+                <td>1 minute</td>
+            </tr>
+            <tr>
+                <td>Generate configuration</td>
+                <td>2-3 minutes</td>
+            </tr>
+            <tr>
+                <td>Install core tools via Conda</td>
+                <td>20-30 minutes</td>
+            </tr>
+            <tr>
+                <td>Install all tools via Conda</td>
+                <td>45-60 minutes</td>
+            </tr>
+            <tr>
+                <td>Verify installation</td>
+                <td>2-3 minutes</td>
+            </tr>
+            <tr>
+                <td>Download reference databases (optional)</td>
+                <td>2-4 hours</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="note-box">
+        <h4>Note</h4>
+        <p>Installation times depend on your internet connection speed and whether Conda needs to download packages or can use cached versions.</p>
+    </div>
+</div>
         <div class="content-section">
             <h2>📋 Quick Start Example</h2>
             
@@ -770,3 +825,4 @@ python setup_tools.py --verify</pre>
     </div>
 </body>
 </html>
+
