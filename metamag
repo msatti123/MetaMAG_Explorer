@@ -1,0 +1,182 @@
+#!/usr/bin/env python3
+# metamag - Main CLI interface for MetaMAG Explorer
+
+import argparse
+import subprocess
+import sys
+import os
+from pathlib import Path
+
+class MetaMAGCLI:
+    """User-friendly CLI for MetaMAG Explorer"""
+    
+    def __init__(self):
+        self.metamag_dir = Path(__file__).parent
+        self.config_file = self.metamag_dir / "MetaMAG" / "config.py"
+        
+    def run(self):
+        parser = argparse.ArgumentParser(
+            prog='metamag',
+            description='MetaMAG Explorer - Metagenome Analysis Pipeline',
+            formatter_class=argparse.RawDescriptionHelpFormatter,
+            epilog=self.get_epilog()
+        )
+        
+        subparsers = parser.add_subparsers(dest='command', help='Available commands')
+        
+        # Install command
+        install_parser = subparsers.add_parser('install', help='Install pipeline tools')
+        install_parser.add_argument('--quick', action='store_true', 
+                                  help='Quick install (essential tools only)')
+        install_parser.add_argument('--full', action='store_true',
+                                  help='Full installation (all tools)')
+        install_parser.add_argument('--tools', nargs='+',
+                                  help='Install specific tools')
+        install_parser.add_argument('--verify', action='store_true',
+                                  help='Verify installation')
+        
+        # Run command
+        run_parser = subparsers.add_parser('run', help='Run pipeline steps')
+        run_parser.add_argument('--samples', required=True,
+                              help='Sample list file')
+        run_parser.add_argument('--steps', nargs='+', required=True,
+                              help='Pipeline steps to run')
+        run_parser.add_argument('--config', default='project_config.yaml',
+                              help='Project configuration file')
+        run_parser.add_argument('--cpus', type=int, default=8,
+                              help='Number of CPUs (default: 8)')
+        run_parser.add_argument('--memory', default='32G',
+                              help='Memory allocation (default: 32G)')
+        run_parser.add_argument('--batch-size', type=int, default=10,
+                              help='Samples per batch (default: 10)')
+        
+        # Status command
+        status_parser = subparsers.add_parser('status', help='Check pipeline status')
+        status_parser.add_argument('--project', help='Project directory')
+        
+        # Config command
+        config_parser = subparsers.add_parser('config', help='Configure pipeline')
+        config_parser.add_argument('--show', action='store_true',
+                                  help='Show current configuration')
+        config_parser.add_argument('--set', nargs=2, metavar=('KEY', 'VALUE'),
+                                  help='Set configuration value')
+        
+        args = parser.parse_args()
+        
+        if not args.command:
+            parser.print_help()
+            return
+        
+        # Route to appropriate handler
+        if args.command == 'install':
+            self.handle_install(args)
+        elif args.command == 'run':
+            self.handle_run(args)
+        elif args.command == 'status':
+            self.handle_status(args)
+        elif args.command == 'config':
+            self.handle_config(args)
+    
+    def handle_install(self, args):
+        """Handle installation commands"""
+        cmd = ['python', 'setup_tools.py']
+        
+        if args.verify:
+            cmd.append('--verify')
+        elif args.quick:
+            cmd.extend(['--tools', 'fastqc', 'fastp', 'trimmomatic'])
+        elif args.full:
+            cmd.append('--all')
+        elif args.tools:
+            cmd.extend(['--tools'] + args.tools)
+        else:
+            # Interactive mode
+            subprocess.run(['bash', 'install_metamag.sh'])
+            return
+        
+        subprocess.run(cmd)
+    
+    def handle_run(self, args):
+        """Handle pipeline execution"""
+        cmd = [
+            'python3', '-m', 'MetaMAG.main',
+            '--project_config', args.config,
+            '--samples-file', args.samples,
+            '--steps'] + args.steps + [
+            '--batch_size', str(args.batch_size),
+            '--cpus', str(args.cpus),
+            '--memory', args.memory,
+            '--time', '2-00:00:00',
+            '--log_dir', './logs'
+        ]
+        
+        print(f"Running pipeline with steps: {', '.join(args.steps)}")
+        subprocess.run(cmd)
+    
+    def handle_status(self, args):
+        """Check pipeline status"""
+        project_dir = args.project or '.'
+        
+        print("\n Pipeline Status")
+        print("=" * 50)
+        
+        # Check for key output directories
+        checks = {
+            'QC Reports': 'QC',
+            'Trimmed Reads': 'Trimming',
+            'Assemblies': 'Assembly',
+            'Bins': 'Binning',
+            'Refined Bins': 'Bin_Refinement',
+            'MAGs': 'Bin_Refinement/drep/dRep_output/dereplicated_genomes',
+            'Taxonomy': 'Novel_Mags/gtdbtk',
+            'Functional Annotation': 'Functional_Annotation'
+        }
+        
+        for name, path in checks.items():
+            full_path = Path(project_dir) / path
+            if full_path.exists():
+                # Count files
+                if full_path.is_dir():
+                    count = len(list(full_path.glob('*')))
+                    print(f" {name}: {count} items")
+                else:
+                    print(f" {name}: Present")
+            else:
+                print(f" {name}: Not found")
+    
+    def handle_config(self, args):
+        """Handle configuration"""
+        if args.show:
+            if self.config_file.exists():
+                print("\n Current Configuration:")
+                print("=" * 50)
+                # Read and display key configs
+                exec(open(self.config_file).read())
+            else:
+                print(" Configuration file not found. Run 'metamag install' first.")
+        elif args.set:
+            print(f"Setting {args.set[0]} = {args.set[1]}")
+            # Implementation for setting config values
+    
+    def get_epilog(self):
+        return """
+Examples:
+  # Interactive installation
+  metamag install
+  
+  # Quick install essential tools
+  metamag install --quick
+  
+  # Run QC and trimming steps
+  metamag run --samples samples.txt --steps qc trimming
+  
+  # Check pipeline status
+  metamag status --project /path/to/project
+  
+  # Verify installation
+  metamag install --verify
+"""
+
+if __name__ == '__main__':
+    cli = MetaMAGCLI()
+    cli.run()
