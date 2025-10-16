@@ -554,10 +554,10 @@
 #SBATCH --error=pipeline_meta_%j.err     # Standard error log
 
 # CRITICAL: Set your conda environment path (adjust to YOUR installation)
-CONDA_ENV="/usr/home/qgg/maralta/.local/bin/miniconda3/bin/activate metamag"
+CONDA_ENV="/path/conda/activate metamag"
 
 # Navigate to MetaMAG directory
-cd /usr/home/qgg/zexi/INCOME/Exp2/MetaG_Exp2_HSink_analysis/pipeline_test/MetaMAG-1.0.0
+cd /path/MetaMAG-1.0.0
 
 # Activate conda environment
 source $CONDA_ENV
@@ -2972,3 +2972,4 @@ echo "=========================================="</pre>
 </body>
 
 </html>
+
