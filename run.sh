@@ -24,10 +24,7 @@
 
 # [REQUIRED] Base directories
 WORK_DIR="/path/to/MetaMAG-1.0.0"                    # MetaMAG installation directory
-OUTPUT_BASE="/path/to/output/directory"               # Where results will be stored
 CONDA_ENV="/path/to/miniconda3/bin/activate metamag"  # Full path to conda activate + environment
-
-# [REQUIRED] Input files
 SAMPLES="/path/to/samples.txt"                        # List of sample names (one per line)
 PROJECT_CONFIG="/path/to/project_config.yaml"         # Project configuration file
 LOG_DIR="./logs/pipeline_run"                         # Directory for pipeline logs
