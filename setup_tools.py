@@ -11,7 +11,7 @@ TOOL_GROUPS = {
     "qc": ["fastqc", "multiqc"],
     "preprocessing": ["fastp", "bwa", "samtools"],
     "assembly": ["idba", "idba_fq2fa", "megahit", "metaquast"],
-    "binning": ["jgi_summarize", "das_tool","DAS_Tool_Fasta2Contig", "metawrap"],
+    "binning": ["jgi_summarize", "das_tool","DAS_Tool_Fasta2Contig", "metawrap", "metabat2"],
     "evaluation": ["checkm2", "drep"],
     "taxonomy": ["gtdbtk", "kraken2", "bracken"],
     "annotation": ["eggnog-mapper","eggnog_db_dir", "dbcan", "dbcan_db_dir", "prodigal"],
@@ -26,9 +26,9 @@ TOOL_EXECUTABLE_MAP = {
     "maxbin2": "run_MaxBin.pl",
     "drep": "dRep",
     "metaquast": "metaquast.py",
-    "jgi_summarize": "jgi_summarize_bam_contig_depths"
+    "jgi_summarize": "jgi_summarize_bam_contig_depths",
+    "metawrap": "python -c 'import metawrap'"
 }
-
 # Dictionary mapping tool names to their conda package names
 TOOL_CONDA_PACKAGE_MAP = {
     "metaquast": "quast",  # metaquast.py comes with quast package
@@ -126,16 +126,6 @@ TOOL_VERSION_COMMANDS = {
 }
 
 # Dictionary mapping tools to their executable names
-TOOL_EXECUTABLE_MAP = {
-    "eggnog-mapper": "emapper.py",
-    "eggnog_mapper": "emapper.py",
-    "dbcan": "run_dbcan.py",
-    "das_tool": "DAS_Tool",
-    "maxbin2": "run_MaxBin.pl",
-    "drep": "dRep",
-    "metaquast": "metaquast.py",
-    "jgi_summarize": "jgi_summarize_bam_contig_depths"
-}
 
 # Conda environments for tools
 TOOL_CONDA_ENVS = {
@@ -403,6 +393,12 @@ def verify_conda_environment(env_name, tool_paths):
             # First, check if the tool path exists as specified
             if tool_path and os.path.exists(tool_path):
                 found = True
+            if tool_path:
+                # Handle Python module case
+                if tool_path.startswith("python -c"):
+                    found = True
+                elif os.path.exists(tool_path):
+                    found = True
             # Check if the tool is directly in found_tools
             elif tool_name in found_tools:
                 tool_path = found_tools[tool_name]
@@ -522,16 +518,16 @@ def verify_conda_environment(env_name, tool_paths):
 def verify_tool_installation(tool_name, tool_path):
     """Verify a tool is properly installed and can be executed."""
    
+    # Handle Python module case FIRST (before checking path existence)
+    if tool_path and tool_path.startswith("python -c"):
+        return True, f"{tool_name} module available"
+    
     if not tool_path or not os.path.exists(tool_path):
         return False, "Tool not found at specified path"
     
-    # Check if the file is executable (but skip for Python modules)
-    if not os.access(tool_path, os.X_OK) and not tool_path.startswith("python -c"):
+    # Check if the file is executable
+    if not os.access(tool_path, os.X_OK):
         return False, "Tool exists but is not executable"
-    
-    # Handle Python module case
-    if tool_path.startswith("python -c"):
-        return True, f"{tool_name} module available"
     
     # Special handling for tools that show usage when run without arguments
     try:
@@ -569,7 +565,7 @@ def verify_tool_installation(tool_name, tool_path):
                 cmd, 
                 capture_output=True, 
                 text=True,
-                timeout=3
+                timeout=5
             )
             
             # Check if the command was successful
@@ -1116,6 +1112,32 @@ def generate_conda_config():
             
             # Store the path to the tool
             available_tools[tool_name.replace('-', '_')] = exec_path
+    
+    # Also check for Python modules that aren't in bin/
+   
+    for tool_name, exec_name in TOOL_EXECUTABLE_MAP.items():
+        if exec_name and exec_name.startswith("python -c"):
+            # This is a Python module, try to import it
+            print(f"Checking Python module: {tool_name} with command: {exec_name}")
+            try:
+                # Extract module name from the import statement
+                import_cmd = exec_name.replace("python -c '", "").replace("'", "")
+                print(f"  Import command: {import_cmd}")
+                result = subprocess.run(
+                    ['python', '-c', import_cmd],
+                    capture_output=True,
+                    text=True,
+                    timeout=2
+                )
+                print(f"  Return code: {result.returncode}")
+                if result.returncode == 0:
+                    # Module is available
+                    available_tools[tool_name.replace('-', '_')] = exec_name
+                    print(f"  SUCCESS: Added {tool_name} to available_tools")
+                else:
+                    print(f"  FAILED: stderr: {result.stderr}")
+            except Exception as e:
+                print(f"  EXCEPTION: {e}")
 
     config_path = "MetaMAG/config.py"
     if not os.path.exists("MetaMAG"):
