@@ -726,15 +726,20 @@ def main():
             # Install all tools in new environment
             print("Installing all tools via Conda...")
             install_tools(list(TOOL_GROUPS.keys()), args.generate_config_on_error)
-    
+      
     elif args.steps:
         # Determine required tools based on requested steps
         tool_groups = set()
         for step in args.steps:
-            if step not in STEP_TO_TOOLS:
+            # First check if it's a pipeline step
+            if step in STEP_TO_TOOLS:
+                tool_groups.update(STEP_TO_TOOLS[step])
+            # Then check if it's a direct tool group name
+            elif step in TOOL_GROUPS:
+                tool_groups.add(step)
+            else:
                 print("Warning: Unknown step '{}'. Skipping.".format(step))
                 continue
-            tool_groups.update(STEP_TO_TOOLS[step])
         
         print("Installing tools for steps: {}".format(', '.join(args.steps)))
         print("Required tool groups: {}".format(', '.join(tool_groups)))
@@ -752,7 +757,8 @@ def main():
         else:
             # Install tools in new environment
             install_tools(tool_groups, args.generate_config_on_error)
-    
+
+
     elif args.tools:
         # Install specific tools
         if env_exists and args.update:
