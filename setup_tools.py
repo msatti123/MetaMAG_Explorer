@@ -17,6 +17,29 @@ TOOL_GROUPS = {
     "annotation": ["eggnog-mapper","eggnog_db_dir", "dbcan", "dbcan_db_dir", "prodigal"],
     }
 
+# Dictionary mapping tools to their executable names
+TOOL_EXECUTABLE_MAP = {
+    "eggnog-mapper": "emapper.py",
+    "eggnog_mapper": "emapper.py",
+    "dbcan": "run_dbcan.py",
+    "das_tool": "DAS_Tool",
+    "maxbin2": "run_MaxBin.pl",
+    "drep": "dRep",
+    "metaquast": "metaquast.py",
+    "jgi_summarize": "jgi_summarize_bam_contig_depths"
+}
+
+# Dictionary mapping tool names to their conda package names
+TOOL_CONDA_PACKAGE_MAP = {
+    "metaquast": "quast",  # metaquast.py comes with quast package
+    "idba_fq2fa": None,    # comes with idba, skip during installation
+    "DAS_Tool_Fasta2Contig": None,  # comes with das_tool, skip
+    "eggnog_db_dir": None,  # database directory, not a package
+    "dbcan_db_dir": None,   # database directory, not a package
+    "jgi_summarize": "metabat2"  # comes with metabat2 package
+}
+
+
 # Define dependencies between steps
 STEP_DEPENDENCIES = {
     "qc": [],
@@ -244,6 +267,28 @@ def update_existing_environment(env_name, tools):
     """
     print("Updating existing environment '{}' with new tools...".format(env_name))
     
+    # Map tool names to their conda package names
+    conda_packages = []
+    for tool in tools:
+        # Check if tool has a special conda package name
+        if tool in TOOL_CONDA_PACKAGE_MAP:
+            conda_pkg = TOOL_CONDA_PACKAGE_MAP[tool]
+            if conda_pkg:  # If not None, add it
+                conda_packages.append(conda_pkg)
+            # If None, skip this tool (it comes bundled with another)
+        else:
+            # Use the tool name as-is
+            conda_packages.append(tool)
+    
+    # Remove duplicates
+    conda_packages = list(set(conda_packages))
+    
+    if not conda_packages:
+        print("No tools to install after filtering.")
+        return True
+    
+    tools = conda_packages
+   
     # For better dependency resolution, try to use mamba if available
     use_mamba = shutil.which("mamba") is not None
     
@@ -973,7 +1018,8 @@ def install_specific_tools(tools, generate_config_on_error=False):
         
         # Add requested tools (preserving version specifications)
         for tool in tools:
-            f.write("  - {}\n".format(tool))
+            if tool not in ["idba_fq2fa", "DAS_Tool_Fasta2Contig", "eggnog_db_dir", "dbcan_db_dir"]:
+                f.write("  - {}\n".format(tool))
         
         # Always include essential Python packages
         f.write("  - pandas\n")
