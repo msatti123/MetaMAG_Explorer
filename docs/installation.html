@@ -535,10 +535,13 @@ Next activate the conda environemnt metamag and start installing tools
 conda activate metamag</pre>
             </div>
 
-            <h4>Option A: Install All Tools via Conda</h4>
+            
+ <h3><span class="step-number">5️⃣</span> Install Additional Tools</h3>
+            <p>Add  tools as needed:</p>
+			<h4>Option A: Install All Tools via Conda</h4>
             <div class="code-block">
 <pre># Install all pipeline tools and create the metamag environment
-python setup_tools.py --all
+python setup_tools.py --update --all
 
 # This creates the metamag environment with all tools</pre>
             </div>
@@ -546,12 +549,48 @@ python setup_tools.py --all
             <h4>Option B: Install Minimal Tools First</h4>
             <div class="code-block">
 <pre># Create environment with just FastQC to start
-python setup_tools.py --tools fastqc
+python setup_tools.py --update --tools fastqc
 
 # This creates the metamag environment with minimal tools</pre>
             </div>
+            <div class="code-block">
+<pre># Install specific tools
+python setup_tools.py --update --tools fastp bwa samtools
 
-            <h3><span class="step-number">5️⃣</span> Customize Tool Paths (if needed)</h3>
+# Install tools for specific pipeline steps
+python setup_tools.py --update --steps trimming assembly
+
+# Install tools for multiple steps
+python setup_tools.py --update --steps qc preprocessing assembly binning</pre>
+            </div>
+
+            <div class="success-box">
+                <strong>Available Installation Options:</strong>
+                <ul>
+                    <li><code>--all</code>: Install all pipeline tools</li>
+                    <li><code>--tools [list]</code>: Install specific tools</li>
+                    <li><code>--steps [list]</code>: Install tools for pipeline steps</li>
+                    <li><code>--update</code>: Add tools to existing environment</li>
+                    <li><code>--force-recreate</code>: Recreate environment from scratch</li>
+                    <li><code>--use-existing</code>: Use system tools without installing</li>
+                </ul>
+            </div>
+
+            <h3><span class="step-number">6️⃣</span> Verify Tool Installation</h3>
+            <p>Check which tools are properly configured:</p>
+            <div class="code-block">
+<pre># Verify all tools
+python setup_tools.py --verify
+
+# Expected output format:
+# Tool                Status     Version/Notes
+# ============================================================
+# fastqc              OK         FastQC v0.11.9
+# fastp               OK         fastp 0.23.2
+# megahit             MISSING    Not found in environment
+# ...</pre>
+            </div>
+            <h3><span class="step-number">7️⃣</span> Customize Tool Paths (if needed)</h3>
             <p>If tools weren't detected automatically, edit your configuration:</p>
             <div class="code-block">
 <pre># Compare your config with the example
@@ -577,45 +616,7 @@ which [toolname]
                 </ul>
             </div>
 
-            <h3><span class="step-number">6️⃣</span> Install Additional Tools</h3>
-            <p>Add more tools as needed:</p>
-            <div class="code-block">
-<pre># Install specific tools
-python setup_tools.py --update --tools fastp bwa samtools
-
-# Install tools for specific pipeline steps
-python setup_tools.py --update --steps trimming assembly
-
-# Install tools for multiple steps
-python setup_tools.py --update --steps qc preprocessing assembly binning</pre>
-            </div>
-
-            <div class="success-box">
-                <strong>Available Installation Options:</strong>
-                <ul>
-                    <li><code>--all</code>: Install all pipeline tools</li>
-                    <li><code>--tools [list]</code>: Install specific tools</li>
-                    <li><code>--steps [list]</code>: Install tools for pipeline steps</li>
-                    <li><code>--update</code>: Add tools to existing environment</li>
-                    <li><code>--force-recreate</code>: Recreate environment from scratch</li>
-                    <li><code>--use-existing</code>: Use system tools without installing</li>
-                </ul>
-            </div>
-
-            <h3><span class="step-number">7️⃣</span> Verify Tool Installation</h3>
-            <p>Check which tools are properly configured:</p>
-            <div class="code-block">
-<pre># Verify all tools
-python setup_tools.py --verify
-
-# Expected output format:
-# Tool                Status     Version/Notes
-# ============================================================
-# fastqc              OK         FastQC v0.11.9
-# fastp               OK         fastp 0.23.2
-# megahit             MISSING    Not found in environment
-# ...</pre>
-            </div>
+           
 
             <h3><span class="step-number">8️⃣</span> Install Python Package</h3>
             <p>Install the MetaMAG pipeline package:</p>
@@ -827,6 +828,7 @@ python setup_tools.py --verify</pre>
     </div>
 </body>
 </html>
+
 
 
 
