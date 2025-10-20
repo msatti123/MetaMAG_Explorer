@@ -10,8 +10,8 @@ import json
 TOOL_GROUPS = {
     "qc": ["fastqc", "multiqc"],
     "preprocessing": ["fastp", "bwa", "samtools"],
-    "assembly": ["idba", "idba_fq2fa", "megahit", "metaquast"],
-    "binning": ["jgi_summarize", "das_tool","DAS_Tool_Fasta2Contig", "metawrap", "metabat2"],
+    "assembly": ["idba", "megahit", "metaquast"],
+    "binning": ["jgi_summarize", "das_tool", "metawrap", "metabat2"],
     "evaluation": ["checkm2", "drep"],
     "taxonomy": ["gtdbtk", "kraken2", "bracken"],
     "annotation": ["eggnog-mapper","eggnog_db_dir", "dbcan", "dbcan_db_dir", "prodigal"],
@@ -138,12 +138,12 @@ TOOL_CONDA_ENVS = {
     "metaquast": "quast",
     "jgi_summarize": "metabat_env",
     "metabat2": "metabat_env",
-    "maxbin2": "metaforge",
-    "concoct": "metaforge",
+    "maxbin2": "metamag",
+    "concoct": "metamag",
     "das_tool": "das_env",
     "metawrap": "metawrap_env",
     "checkm2": "checkm_env",
-    "drep": "drep",
+    "drep": "metamag",
     "gtdbtk": "gtdbtk",
     "kraken2": "metamag",
     "bracken": "metamag",
@@ -318,6 +318,108 @@ def update_existing_environment(env_name, tools):
                 return False
         
         return False
+
+def smart_install_tools(tools_list):
+    """
+    Smart installation strategy:
+    1. Try to install in metamag first (for tools with Python 3.9)
+    2. Create separate environments only for known conflicts
+    """
+    # Tools that MUST have separate environments (known conflicts)
+    MUST_SEPARATE = {
+        "checkm2": ("checkm_env", "3.8"),   # Python version conflict
+        "gtdbtk": ("gtdbtk", "3.9"),        # Complex dependencies
+        "dbcan": ("dbcan", "3.9")           # Specific dependencies
+    }
+    
+    # Separate tools into groups
+    metamag_tools = []
+    separate_env_tools = {}
+    
+    for tool in tools_list:
+        tool_name = tool.replace('-', '_')
+        
+        # Check if this tool MUST be in separate environment
+        if tool_name in MUST_SEPARATE:
+            env_name, python_ver = MUST_SEPARATE[tool_name]
+            if env_name not in separate_env_tools:
+                separate_env_tools[env_name] = {'python': python_ver, 'tools': []}
+            
+            # Map to conda package name
+            if tool in TOOL_CONDA_PACKAGE_MAP:
+                conda_pkg = TOOL_CONDA_PACKAGE_MAP[tool]
+                if conda_pkg:
+                    separate_env_tools[env_name]['tools'].append(conda_pkg)
+            else:
+                separate_env_tools[env_name]['tools'].append(tool)
+        else:
+            # Try in metamag first
+            if tool in TOOL_CONDA_PACKAGE_MAP:
+                conda_pkg = TOOL_CONDA_PACKAGE_MAP[tool]
+                if conda_pkg:
+                    metamag_tools.append(conda_pkg)
+            else:
+                metamag_tools.append(tool)
+    
+    # Remove duplicates
+    metamag_tools = list(set(metamag_tools))
+    
+    print("\n" + "="*60)
+    print("INSTALLATION PLAN:")
+    print("="*60)
+    if metamag_tools:
+        print(f"metamag (Python 3.9): {', '.join(metamag_tools)}")
+    for env_name, env_info in separate_env_tools.items():
+        tools = list(set(env_info['tools']))
+        python_ver = env_info['python']
+        print(f"{env_name} (Python {python_ver}): {', '.join(tools)}")
+    print("="*60 + "\n")
+    
+    success = True
+    
+    # Step 1: Install most tools in metamag
+    if metamag_tools:
+        print(f"Installing {len(metamag_tools)} tools in 'metamag' environment...")
+        if not update_existing_environment("metamag", metamag_tools):
+            print("Warning: Some tools may have failed in metamag")
+            success = False
+    
+    # Step 2: Install problematic tools in separate environments
+    for env_name, env_info in separate_env_tools.items():
+        tools = list(set(env_info['tools']))
+        python_ver = env_info['python']
+        
+        env_exists = check_env_exists(env_name)
+        
+        if env_exists:
+            print(f"\nUpdating '{env_name}' environment...")
+            if not update_existing_environment(env_name, tools):
+                success = False
+        else:
+            print(f"\nCreating '{env_name}' environment (Python {python_ver})...")
+            if not create_environment_with_tools(env_name, python_ver, tools):
+                success = False
+    
+    return success
+
+def create_environment_with_tools(env_name, python_ver, tools):
+    """Create a new conda environment with specified Python version and tools."""
+    use_mamba = shutil.which("mamba") is not None
+    installer = "mamba" if use_mamba else "conda"
+    
+    cmd = [installer, 'create', '--name', env_name, '--yes',
+           '-c', 'bioconda', '-c', 'conda-forge',
+           f'python={python_ver}'] + tools
+    
+    try:
+        print(f"Running: {' '.join(cmd)}")
+        subprocess.run(cmd, check=True)
+        print(f"Successfully created environment '{env_name}'")
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"Error creating environment '{env_name}': {e}")
+        return False
+
 
 def verify_conda_environment(env_name, tool_paths):
     """Verify all tools in the conda environment are properly installed and check for missing pipeline tools."""
@@ -641,9 +743,31 @@ def main():
                 config_module = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(config_module)
                 
+
                 # Use the imported config
                 config = config_module.config
-                tool_paths = config.get("tools", {})
+                
+                # Get tools from both locations
+                direct_tools = config.get("tools", {})
+                detected_tools = config.get("tool_configs", {})
+                
+                # Merge them - prefer detected_tools (from all environments)
+                tool_paths = {}
+                
+                # First add direct tools
+                for tool_name, tool_path in direct_tools.items():
+                    if tool_path:  # Only add if not empty
+                        tool_paths[tool_name] = tool_path
+                
+                # Then add/override with detected tools from all environments
+                for tool_name, tool_info in detected_tools.items():
+                    if tool_info:
+                        if isinstance(tool_info, dict) and "path" in tool_info:
+                            tool_paths[tool_name] = tool_info["path"]
+                        elif isinstance(tool_info, str):
+                            tool_paths[tool_name] = tool_info
+
+
                 
                 # Determine environment name
                 env_name = "metamag"  # Default environment name
@@ -791,9 +915,9 @@ def main():
             if group in TOOL_GROUPS:
                 tools_to_install.update(TOOL_GROUPS[group])
         
-        if env_exists and args.update:
-            # Update existing environment with selected tools
-            update_existing_environment("metamag", sorted(tools_to_install))
+        if args.update:
+            # Use smart installation strategy
+            smart_install_tools(sorted(tools_to_install))
             generate_conda_config()
         else:
             # Install tools in new environment
@@ -802,9 +926,9 @@ def main():
 
     elif args.tools:
         # Install specific tools
-        if env_exists and args.update:
-            # Update existing environment with selected tools
-            update_existing_environment("metamag", args.tools)
+        if args.update:
+            # Use smart installation strategy
+            smart_install_tools(args.tools)
             generate_conda_config()
         else:
             # Install tools in new environment
