@@ -787,13 +787,14 @@ reference: "/path/to/host/genome.fa"  # Optional for host removal
 EOF
 
 # 3. Run quality control step
-python main.py --project_config project_config.yaml \
+python -m MetaMAG.main --project_config project_config.yaml \
   --samples-file samples.txt \
   --steps qc \
   --batch_size 2 \
   --cpus 8 \
   --memory "32G" \
-  --time "2:00:00"</pre>
+  --time "2:00:00" \
+  --log_dir ./logs</pre>
             </div>
 
             <h3>Tool Categories</h3>
@@ -905,6 +906,7 @@ python setup_tools.py --verify</pre>
     </div>
 </body>
 </html>
+
 
 
 
