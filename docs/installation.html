@@ -536,25 +536,20 @@ conda activate metamag</pre>
             </div>
 
             
- <h3><span class="step-number">5️⃣</span> Install Additional Tools</h3>
+ <h3><span class="step-number">5️⃣</span> Install Required Tools</h3>
             <p>Add  tools as needed:</p>
 			<h4>Option A: Install All Tools via Conda</h4>
             <div class="code-block">
 <pre># Install all pipeline tools and create the metamag environment
 python setup_tools.py --update --all
 
-# This creates the metamag environment with all tools</pre>
+# This will install all require tools</pre>
             </div>
 
             <h4>Option B: Install Minimal Tools First</h4>
             <div class="code-block">
-<pre># Create environment with just FastQC to start
-python setup_tools.py --update --tools fastqc
-
-# This creates the metamag environment with minimal tools</pre>
-            </div>
-            <div class="code-block">
 <pre># Install specific tools
+python setup_tools.py --update --tools fastqc
 python setup_tools.py --update --tools fastp bwa samtools
 
 # Install tools for specific pipeline steps
@@ -828,6 +823,7 @@ python setup_tools.py --verify</pre>
     </div>
 </body>
 </html>
+
 
 
 
