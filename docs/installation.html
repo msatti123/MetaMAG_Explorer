@@ -553,11 +553,45 @@ python setup_tools.py --update --tools fastqc
 python setup_tools.py --update --tools fastp bwa samtools
 
 # Install tools for specific pipeline steps
-python setup_tools.py --update --steps trimming assembly
+python setup_tools.py --update --steps trimming
 
 # Install tools for multiple steps
 python setup_tools.py --update --steps qc preprocessing assembly binning</pre>
             </div>
+			<table style="width:100%; margin-top: 15px; border-collapse: collapse;">
+            <tr style="background-color: #f0f0f0;">
+                <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Step Name</th>
+                <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Included Tools</th>
+            </tr>
+            <tr>
+                <td style="padding: 8px; border: 1px solid #ddd;"><strong>qc</strong></td>
+                <td style="padding: 8px; border: 1px solid #ddd;">fastqc, multiqc</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px; border: 1px solid #ddd;"><strong>preprocessing</strong></td>
+                <td style="padding: 8px; border: 1px solid #ddd;">fastp, bwa, samtools</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px; border: 1px solid #ddd;"><strong>assembly</strong></td>
+                <td style="padding: 8px; border: 1px solid #ddd;">idba, idba_fq2fa, megahit, metaquast</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px; border: 1px solid #ddd;"><strong>binning</strong></td>
+                <td style="padding: 8px; border: 1px solid #ddd;">jgi_summarize, das_tool, DAS_Tool_Fasta2Contig, metawrap</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px; border: 1px solid #ddd;"><strong>evaluation</strong></td>
+                <td style="padding: 8px; border: 1px solid #ddd;">checkm2, drep</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px; border: 1px solid #ddd;"><strong>taxonomy</strong></td>
+                <td style="padding: 8px; border: 1px solid #ddd;">gtdbtk, kraken2, bracken</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px; border: 1px solid #ddd;"><strong>annotation</strong></td>
+                <td style="padding: 8px; border: 1px solid #ddd;">eggnog-mapper, dbcan, prodigal (+ databases)</td>
+            </tr>
+        </table>
 
             <div class="success-box">
                 <strong>Available Installation Options:</strong>
@@ -823,6 +857,7 @@ python setup_tools.py --verify</pre>
     </div>
 </body>
 </html>
+
 
 
 
