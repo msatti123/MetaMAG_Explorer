@@ -525,7 +525,7 @@ cat config_example.py
             <h3><span class="step-number">4️⃣</span> Generate Your Configuration File</h3>
             <p>Choose one of the following approaches based on your setup:</p>
             
-            <h4>Option A: Use Existing Tools (if already installed)</h4>
+            <h4> First create config file and check for existing tools (if already installed)</h4>
             <div class="code-block">
 <pre># Scan your system for existing tools and generate config
 python setup_tools.py --use-existing
@@ -533,7 +533,7 @@ python setup_tools.py --use-existing
 # This creates MetaMAG/config.py based on tools found in your PATH</pre>
             </div>
 
-            <h4>Option B: Install All Tools via Conda</h4>
+            <h4>Option A: Install All Tools via Conda</h4>
             <div class="code-block">
 <pre># Install all pipeline tools and create the metamag environment
 python setup_tools.py --all
@@ -541,7 +541,7 @@ python setup_tools.py --all
 # This creates the metamag environment with all tools</pre>
             </div>
 
-            <h4>Option C: Install Minimal Tools First</h4>
+            <h4>Option B: Install Minimal Tools First</h4>
             <div class="code-block">
 <pre># Create environment with just FastQC to start
 python setup_tools.py --tools fastqc
@@ -825,4 +825,5 @@ python setup_tools.py --verify</pre>
     </div>
 </body>
 </html>
+
 
