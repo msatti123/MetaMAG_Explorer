@@ -369,6 +369,50 @@
                 display: none;
             }
         }
+		/* Table Styles */
+        table {
+            width: 100%;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            border-collapse: collapse;
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        table thead {
+            background: var(--primary-color);
+        }
+
+        table th {
+            padding: 15px;
+            text-align: left;
+            color: var(--light-text);
+            font-weight: 600;
+            font-size: 1rem;
+            border-bottom: 2px solid var(--primary-dark);
+        }
+
+        table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+            color: var(--dark-text);
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        table tr:hover {
+            background-color: rgba(94, 53, 177, 0.05);
+            transition: background-color 0.3s ease;
+        }
+
+        table td strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -558,39 +602,43 @@ python setup_tools.py --update --steps trimming
 # Install tools for multiple steps
 python setup_tools.py --update --steps qc preprocessing assembly binning</pre>
             </div>
-			<table style="width:100%; margin-top: 15px; border-collapse: collapse;">
-            <tr style="background-color: #f0f0f0;">
-                <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Step Name</th>
-                <th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Included Tools</th>
-            </tr>
-            <tr>
-                <td style="padding: 8px; border: 1px solid #ddd;"><strong>qc</strong></td>
-                <td style="padding: 8px; border: 1px solid #ddd;">fastqc, multiqc</td>
-            </tr>
-            <tr>
-                <td style="padding: 8px; border: 1px solid #ddd;"><strong>preprocessing</strong></td>
-                <td style="padding: 8px; border: 1px solid #ddd;">fastp, bwa, samtools</td>
-            </tr>
-            <tr>
-                <td style="padding: 8px; border: 1px solid #ddd;"><strong>assembly</strong></td>
-                <td style="padding: 8px; border: 1px solid #ddd;">idba, idba_fq2fa, megahit, metaquast</td>
-            </tr>
-            <tr>
-                <td style="padding: 8px; border: 1px solid #ddd;"><strong>binning</strong></td>
-                <td style="padding: 8px; border: 1px solid #ddd;">jgi_summarize, das_tool, DAS_Tool_Fasta2Contig, metawrap</td>
-            </tr>
-            <tr>
-                <td style="padding: 8px; border: 1px solid #ddd;"><strong>evaluation</strong></td>
-                <td style="padding: 8px; border: 1px solid #ddd;">checkm2, drep</td>
-            </tr>
-            <tr>
-                <td style="padding: 8px; border: 1px solid #ddd;"><strong>taxonomy</strong></td>
-                <td style="padding: 8px; border: 1px solid #ddd;">gtdbtk, kraken2, bracken</td>
-            </tr>
-            <tr>
-                <td style="padding: 8px; border: 1px solid #ddd;"><strong>annotation</strong></td>
-                <td style="padding: 8px; border: 1px solid #ddd;">eggnog-mapper, dbcan, prodigal (+ databases)</td>
-            </tr>
+			<table>
+            <thead>
+                <tr>
+                    <th>Step Name</th>
+                    <th>Included Tools</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>qc</strong></td>
+                    <td>fastqc, multiqc</td>
+                </tr>
+                <tr>
+                    <td><strong>preprocessing</strong></td>
+                    <td>fastp, bwa, samtools</td>
+                </tr>
+                <tr>
+                    <td><strong>assembly</strong></td>
+                    <td>idba, idba_fq2fa, megahit, metaquast</td>
+                </tr>
+                <tr>
+                    <td><strong>binning</strong></td>
+                    <td>jgi_summarize, das_tool, DAS_Tool_Fasta2Contig, metawrap</td>
+                </tr>
+                <tr>
+                    <td><strong>evaluation</strong></td>
+                    <td>checkm2, drep</td>
+                </tr>
+                <tr>
+                    <td><strong>taxonomy</strong></td>
+                    <td>gtdbtk, kraken2, bracken</td>
+                </tr>
+                <tr>
+                    <td><strong>annotation</strong></td>
+                    <td>eggnog-mapper, dbcan, prodigal (+ databases)</td>
+                </tr>
+            </tbody>
         </table>
 
             <div class="success-box">
@@ -857,6 +905,7 @@ python setup_tools.py --verify</pre>
     </div>
 </body>
 </html>
+
 
 
 
