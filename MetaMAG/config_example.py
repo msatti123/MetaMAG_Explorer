@@ -311,51 +311,51 @@ def detect_tool_locations():
 config = {
     "environment": {
          "PERL5LIB": "/opt/ghpc/lib64/perl-5.36",
-         "conda_env": "source /usr/home/qgg/maralta/.local/bin/miniconda3/bin/activate metamag",
+         "conda_env": "source /usr/home/.local/bin/miniconda3/bin/activate metamag",
     },
     "tools": {
         # qc tools
-        "fastqc": "/usr/home/qgg/maralta/.local/bin/miniconda3/envs/metaforge/bin/fastqc",
-        "multiqc": "/usr/home/qgg/maralta/.local/bin/miniconda3/envs/metaforge/bin/multiqc",
+        "fastqc": "/usr/home/.local/bin/miniconda3/envs/metaforge/bin/fastqc",
+        "multiqc": "/usr/home/.local/bin/miniconda3/envs/metaforge/bin/multiqc",
 
         # preprocessing tools
-        "fastp": "/usr/home/ironbank/researchdata/metagenome/meta_pipeline/2.1_Trim_short/fastp-0.23.2/fastp",
-        "bwa": "/opt/ghpc/bin/bwa",
-        "samtools": "/opt/ghpc/bin/samtools",
+        "fastp": "/usr/home/meta_pipeline/2.1_Trim_short/fastp-0.23.2/fastp",
+        "bwa": "/bin/bwa",
+        "samtools": "/bin/samtools",
         
         # assembly tools
-        "idba": "/usr/home/ironbank/researchdata/metagenome/meta_pipeline/3.1_assemble_short/idba-1.1.3/bin/idba_ud",
-        "idba_fq2fa": "/usr/home/ironbank/researchdata/metagenome/meta_pipeline/3.1_assemble_short/idba-1.1.3/bin/fq2fa",
-        "megahit": "/usr/home/ironbank/researchdata/metagenome/meta_pipeline/3.1_assemble_short/MEGAHIT-1.2.9-Linux-x86_64-static/bin/megahit",
-        "metaquast": "/usr/home/qgg/maralta/.local/bin/miniconda3/envs/quast/bin/metaquast.py",
+        "idba": "/usr/home/meta_pipeline/3.1_assemble_short/idba-1.1.3/bin/idba_ud",
+        "idba_fq2fa": "/usr/home/metagenome/meta_pipeline/3.1_assemble_short/idba-1.1.3/bin/fq2fa",
+        "megahit": "/usr/home/meta_pipeline/3.1_assemble_short/MEGAHIT-1.2.9-Linux-x86_64-static/bin/megahit",
+        "metaquast": "/usr/home/.local/bin/miniconda3/envs/quast/bin/metaquast.py",
 
 
         # binning tools
-        "jgi_summarize": "/usr/home/qgg/maralta/.local/bin/miniconda3/envs/metabat_env/bin/jgi_summarize_bam_contig_depths",
-        "das_tool": "/usr/home/qgg/maralta/.local/bin/miniconda3/bin/activate das_env",
-        "DAS_Tool_Fasta2Contig": "/usr/home/workspace/tmp.0/zexi/app/DAS_Tool-1.1.4/src/Fasta_to_Contig2Bin.sh",
-        "metawrap": "/usr/home/qgg/maralta/.local/bin/miniconda3/bin/activate metawrap_env",
+        "jgi_summarize": "/usr/home/.local/bin/miniconda3/envs/metabat_env/bin/jgi_summarize_bam_contig_depths",
+        "das_tool": "/usr/home//.local/bin/miniconda3/bin/activate das_env",
+        "DAS_Tool_Fasta2Contig": "/usr/home/DAS_Tool-1.1.4/src/Fasta_to_Contig2Bin.sh",
+        "metawrap": "/usr/home/.local/bin/miniconda3/bin/activate metawrap_env",
         
 
         # evaluation tools
-        "checkm": "/usr/home/qgg/maralta/.local/bin/miniconda3/bin/activate checkm_env",
-        "drep": "/usr/home/qgg/maralta/.local/bin/miniconda3/bin/activate drep",
+        "checkm": "/usr/home/.local/bin/miniconda3/bin/activate checkm_env",
+        "drep": "/usr/home/.local/bin/miniconda3/bin/activate drep",
 
         # taxonomy tools
-        "gtdbtk": "/usr/home/qgg/maralta/.local/bin/miniconda3/bin/activate gtdbtk-2.4.1",
-        "kraken2": "/usr/home/ironbank/researchdata/metagenome/meta_pipeline/6_Taxonomy/kraken2-2.1.2/kraken2",
-        "kraken2_build": "/usr/home/ironbank/researchdata/metagenome/meta_pipeline/6_Taxonomy/kraken2-2.1.2/kraken2-build",
-        "bracken": "/usr/home/ironbank/researchdata/metagenome/meta_pipeline/9_Abundance/Bracken-2.7/src/est_abundance.py",
-        "bracken_build": "/usr/home/workspace/tmp.0/zexi/app/Bracken-2.7/bracken-build",
+        "gtdbtk": "/usr/home/.local/bin/miniconda3/bin/activate gtdbtk-2.4.1",
+        "kraken2": "/usr/home/meta_pipeline/6_Taxonomy/kraken2-2.1.2/kraken2",
+        "kraken2_build": "/usr/home/meta_pipeline/6_Taxonomy/kraken2-2.1.2/kraken2-build",
+        "bracken": "/usr/home/meta_pipeline/9_Abundance/Bracken-2.7/src/est_abundance.py",
+        "bracken_build": "/usr/home/app/Bracken-2.7/bracken-build",
 
 
         # annotation tools
-        "eggnog_mapper": "/usr/home/ironbank/researchdata/metagenome/meta_pipeline/4.2_gene_annoation/eggnog-mapper-2.1.11/emapper.py",
-        "eggnog_db_dir": "/usr/home/ironbank/researchdata/metagenome/meta_pipeline/db/eggNOGdb",
-        "dbcan": "/usr/home/qgg/maralta/.local/bin/miniconda3/envs/dbcan/bin/run_dbcan.py",
-        "dbcan_db_dir": "/usr/home/qgg/maralta/.local/bin/miniconda3/envs/dbcan/databases/",
-        "dbcan_activate": "/usr/home/qgg/maralta/.local/bin/miniconda3/etc/profile.d/conda.sh && conda activate dbcan",
-        "prodigal": "/usr/home/workspace/tmp.0/zexi/app/Prodigal_v2.6.3/prodigal.linux",
+        "eggnog_mapper": "/usr/home/metagenome/meta_pipeline/4.2_gene_annoation/eggnog-mapper-2.1.11/emapper.py",
+        "eggnog_db_dir": "/usr/home/meta_pipeline/db/eggNOGdb",
+        "dbcan": "/usr/home/qgg/miniconda3/envs/dbcan/bin/run_dbcan.py",
+        "dbcan_db_dir": "/usr/home/miniconda3/envs/dbcan/databases/",
+        "dbcan_activate": "/usr/home/miniconda3/etc/profile.d/conda.sh && conda activate dbcan",
+        "prodigal": "/usr/home/app/Prodigal_v2.6.3/prodigal.linux",
     },
     "tool_configs": {},
     "r_config": None
