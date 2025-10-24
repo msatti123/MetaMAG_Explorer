@@ -310,7 +310,7 @@ def detect_tool_locations():
 # Base config - includes all tools needed for the pipeline
 config = {
     "environment": {
-         "PERL5LIB": "/opt/ghpc/lib64/perl-5.36",
+         "PERL5LIB": "/perl-5.36",
          "conda_env": "source /usr/home/.local/bin/miniconda3/bin/activate metamag",
     },
     "tools": {
